@@ -6,9 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.Shoot;
+import frc.robot.subsystems.ShooterTestJig;
 
 public class RobotContainer {
+
+  private ShooterTestJig m_shooter = new ShooterTestJig();
+  private Shoot m_shoot = new Shoot(m_shooter);
+
   public RobotContainer() {
+    m_shooter.setDefaultCommand(m_shoot);
+
     configureBindings();
   }
 
