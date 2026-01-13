@@ -4,10 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.constants.IOConstants;
 
 public class RobotContainer {
+
+  private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
+  private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
+
   public RobotContainer() {
     configureBindings();
   }
