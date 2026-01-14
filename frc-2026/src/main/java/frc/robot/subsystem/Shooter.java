@@ -55,18 +55,18 @@ public class Shooter extends SubsystemBase {
     return m_topMotor.get();
   }
 
-  public double getBottomEncoderPosition() {
-    return m_bottomMotor1.getEncoder().getPosition();
+  public double getBottomEncoderVelocity() {
+    return m_bottomMotor1.getEncoder().getVelocity()/ShooterConstants.kBottomWheelToMotorConvertion;
   }
 
-  public double getTopEncoderPosition() {
-    return m_topMotor.getEncoder().getPosition();
+  public double getTopEncoderVelocity() {
+    return m_topMotor.getEncoder().getVelocity()/ShooterConstants.kUpperWheelToMotorConvertion;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Bottom Motor Speed", getBottomEncoderPosition());
+    SmartDashboard.putNumber("Bottom Motor Speed", getBottomEncoderVelocity());
     SmartDashboard.putNumber("Upper Motor Speed", getUpperSpeed());
   }
 }

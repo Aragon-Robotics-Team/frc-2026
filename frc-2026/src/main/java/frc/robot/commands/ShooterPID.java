@@ -51,8 +51,8 @@ public class ShooterPID extends Command {
     m_bottomTicksGoal = m_bottomMotorRotation * ShooterConstants.kTicksPerRotation;
     m_UpperTicksGoal = m_UpperMotorRotation * ShooterConstants.kTicksPerRotation;
 
-    m_currentBottomTickPosition = m_shooter.getBottomEncoderPosition();
-    m_currentTopTickPosition = m_shooter.getTopEncoderPosition();
+    m_currentBottomTickPosition = m_shooter.getBottomEncoderVelocity();
+    m_currentTopTickPosition = m_shooter.getTopEncoderVelocity();
 
     m_bottomMotorSpeed = m_pidController.calculate(m_currentBottomTickPosition, m_bottomTicksGoal);
     m_UpperMotorSpeed = m_pidController.calculate(m_currentTopTickPosition, m_UpperTicksGoal);
