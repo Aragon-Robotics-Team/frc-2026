@@ -37,6 +37,11 @@ public class DriveConstants {
     public static final double kDummySpeedMultiplier = 0;
     public static final int kGyroID = 0;
     public static final double kMaxMotorSpeed = 5; //tentative
+    public static final int kGearRatio = 6; //tentative
+
+    public static final int kLeftYAxisID = 0;
+    public static final int kLeftXAxisID = 0;
+    public static final int kRightXAxisID = 0;
 
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(new Translation2d(0.31, 0.31),
     new Translation2d(0.31, -0.31),
