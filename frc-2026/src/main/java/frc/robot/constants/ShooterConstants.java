@@ -16,6 +16,6 @@ public class ShooterConstants {
 
     public static final double kTicksPerRotation = 0;
 
-    public static final double kBottomWheelToMotorConvertion = 18/30;
-    public static final double kUpperWheelToMotorConvertion = 13/24;
+    public static final double kBottomWheelToMotorConvertion = 18.0/30;
+    public static final double kUpperWheelToMotorConvertion = 13.0/24;
 }
