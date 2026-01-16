@@ -16,7 +16,7 @@ public class RobotContainer {
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
 
-  private SwerveDrive m_swerveDrive;
+  private SwerveDrive m_swerveDrive = new SwerveDrive();
   private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_driverJoystick);
 
   public RobotContainer() {

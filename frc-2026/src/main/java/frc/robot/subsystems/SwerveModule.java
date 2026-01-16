@@ -42,13 +42,15 @@ public class SwerveModule extends SubsystemBase {
   if (DriverStation.isTest()) {driveMotorMode = 1;}}
 
   public void setModuleState(SwerveModuleState state) {
-    Rotation2d m_currentAngle = new Rotation2d((m_absoluteEncoder.get() - m_absoluteEncoderOffset) < 0 ? (m_absoluteEncoder.get() - m_absoluteEncoderOffset + 2 * Math.PI) : (m_absoluteEncoder.get() - m_absoluteEncoderOffset));
-    state.optimize(m_currentAngle);
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
     Logger.recordOutput("drive motor speed", m_driveMotorRotationsPerSecond);
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(driveMotorMode).withVelocity(m_driveMotorRotationsPerSecond));
+
+    Rotation2d m_currentAngle = new Rotation2d((m_absoluteEncoder.get() - m_absoluteEncoderOffset) < 0 ? (m_absoluteEncoder.get() - m_absoluteEncoderOffset + 2 * Math.PI) : (m_absoluteEncoder.get() - m_absoluteEncoderOffset));
+    state.optimize(m_currentAngle);
+    Logger.recordOutput("current angle", m_currentAngle);
     double m_error = m_pid.calculate(m_currentAngle.getRadians(), state.angle.getRadians());
-    Logger.recordOutput("turn motor speed", m_error);
+    Logger.recordOutput("turn error", m_error);
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
   }
 

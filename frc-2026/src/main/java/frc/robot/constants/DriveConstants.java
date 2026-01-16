@@ -29,12 +29,11 @@ public class DriveConstants {
     public static final int kBackLeftEncoderOffset = 0;
     public static final int kBackRightEncoderOffset = 0;
 
-    public static final int kP = 0;
-    public static final int kI = 0;
-    public static final int kD = 0;
+    public static final double kP = 0.1;
+    public static final double kI = 0;
+    public static final double kD = 0;
 
     public static final double kWheelDiameter = 0;
-    public static final double kDummySpeedMultiplier = 0;
     public static final int kGyroID = 0;
     public static final double kMaxMotorSpeed = 5; //tentative
     public static final int kGearRatio = 6; //tentative
