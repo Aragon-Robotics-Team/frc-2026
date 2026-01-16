@@ -39,8 +39,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setBottomDutyCycle(double DutyCycle) { // between -1.0 and 1.0; positive is shooting outwards
-    m_bottomMotorCCW.set(-DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
-    m_bottomMotorCW.set(DutyCycle);  // the motor spinning CW so it is positive
+    m_bottomMotorCCW.set(DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
+    m_bottomMotorCW.set(-DutyCycle);  // the motor spinning CW so it is positive
   }
 
   public void setTopDutyCycle(double DutyCycle) { // between -1.0 and 1.0
@@ -70,6 +70,12 @@ public class Shooter extends SubsystemBase {
 
   public double getTopRPM() {
     return m_topMotorCW.getEncoder().getVelocity() * ShooterConstants.kTopMotorToWheelRatio;
+  }
+
+  public void setBottomVoltage(double voltage) {
+    m_bottomMotorCCW.setVoltage(-voltage);
+    m_bottomMotorCW.setVoltage(voltage);
+
   }
 
   
