@@ -4,13 +4,28 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ClimbConstants;
+import frc.robot.constants.IOConstants;
+import frc.robot.subsystems.Climb;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ArcadeClimb extends Command {
+  private Climb m_climb;
+  private Joystick m_joystick;
+  private double m_speed;
+  private ArcadeClimbSendable m_arcadeClimbSendable = new ArcadeClimbSendable();
+
   /** Creates a new ArcadeClimb. */
-  public ArcadeClimb() {
+  public ArcadeClimb(Climb climb, Joystick joystick) {
+    m_climb = climb;
+    m_joystick = joystick;
+
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_climb);
   }
 
   // Called when the command is initially scheduled.
@@ -19,15 +34,34 @@ public class ArcadeClimb extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_speed = m_joystick.getRawAxis(IOConstants.kClimbJoystickAxis);
+    m_speed *= ClimbConstants.kArcadeSpeedModifier;
+    m_climb.setSpeed(m_speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_climb.setSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public Sendable getSendable() {
+    return m_arcadeClimbSendable;
+  }
+
+  private class ArcadeClimbSendable implements Sendable {
+    
+    @Override
+    public void initSendable(SendableBuilder builder) {
+      builder.setSmartDashboardType("Arcade Elevator");
+      builder.addDoubleProperty("Speed", ()-> m_climb.getSpeed(), null);
+    }
   }
 }

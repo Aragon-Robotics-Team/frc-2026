@@ -8,4 +8,7 @@ package frc.robot.constants;
 public class IOConstants {
     public static final int kDriverJoystickID = 0;
     public static final int kSecondaryJoystickID = 1;
+    public static final int kClimbJoystickAxis = 0;
+    public static final int kClimbToStowedButtonID = 0;
+    public static final int kClimbToExtendedButtonID = 1;
 }
