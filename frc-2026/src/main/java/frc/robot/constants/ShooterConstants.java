@@ -6,16 +6,19 @@ package frc.robot.constants;
 
 /** Add your docs here. */
 public class ShooterConstants {
-    public static final int kSparkMaxIDB1 = 0;
-    public static final int kSparkMaxIDB2 = 0;
-    public static final int kSparkMaxIDT = 0;
+    //
+    public static final int kSparkMaxID_Bottom_CCW = 19;
+    public static final int kSparkMaxID_Bottom_CW = 16;
+    public static final int kSparkMaxID_Top_CW = 2;
 
-    public static final double kP = 0;
+    public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double kTicksPerRotation = 0;
+    public static final double kNeoMaxRPM = 5676.0; // these are based on REV's numbers
+    public static final double kWheelMaxRPM = 9460.0; // REV's numbers
+    public static final double kNeoTicksPerRotation = 42;
 
-    public static final double kBottomWheelToMotorConvertion = 18/30;
-    public static final double kUpperWheelToMotorConvertion = 13/24;
+    public static final double kBottomMotorToWheelRatio = 30.0/18.0; // this is true
+    public static final double kTopMotorToWheelRatio = 24.0/13.0; // not sure if this one is true. 
 }

@@ -17,56 +17,65 @@ import frc.robot.constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
-  private SparkMax m_bottomMotor1 = new SparkMax(ShooterConstants.kSparkMaxIDB1, MotorType.kBrushless);
-  private SparkMax m_bottomMotor2 = new SparkMax(ShooterConstants.kSparkMaxIDB2, MotorType.kBrushless);
-  private SparkMax m_topMotor = new SparkMax(ShooterConstants.kSparkMaxIDT, MotorType.kBrushless);
+  private SparkMax m_bottomMotorCCW = new SparkMax(ShooterConstants.kSparkMaxID_Bottom_CCW, MotorType.kBrushless);
+  private SparkMax m_bottomMotorCW = new SparkMax(ShooterConstants.kSparkMaxID_Bottom_CW, MotorType.kBrushless);
+  private SparkMax m_topMotorCW = new SparkMax(ShooterConstants.kSparkMaxID_Top_CW, MotorType.kBrushless);
 
-  private SparkMaxConfig m_configB1 = new SparkMaxConfig();
-  private SparkMaxConfig m_configB2 = new SparkMaxConfig();
-  private SparkMaxConfig m_configT = new SparkMaxConfig();
+  private SparkMaxConfig m_config_Bottom_CCW = new SparkMaxConfig();
+  private SparkMaxConfig m_config_Bottom_CW = new SparkMaxConfig();
+  private SparkMaxConfig m_config_Top = new SparkMaxConfig();
 
   /** Creates a new Shooter. */
   public Shooter() {
-    m_configB1.idleMode(IdleMode.kBrake);
-    m_configB2.idleMode(IdleMode.kBrake);
-    m_configT.idleMode(IdleMode.kBrake);
+    m_config_Bottom_CCW.idleMode(IdleMode.kCoast);
+    m_config_Bottom_CW.idleMode(IdleMode.kCoast);
+    m_config_Top.idleMode(IdleMode.kCoast);
 
-    m_bottomMotor1.configure(m_configB1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_bottomMotor2.configure(m_configB2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_topMotor.configure(m_configT, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_bottomMotorCCW.configure(m_config_Bottom_CCW, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_bottomMotorCW.configure(m_config_Bottom_CW, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_topMotorCW.configure(m_config_Top, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     //configure motor later
   }
 
-  public void setBottomSpeed(double speed) {
-    m_bottomMotor1.set(speed);
-    m_bottomMotor2.set(speed);
+  public void setBottomDutyCycle(double DutyCycle) { // between -1.0 and 1.0; positive is shooting outwards
+    m_bottomMotorCCW.set(-DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
+    m_bottomMotorCW.set(DutyCycle);  // the motor spinning CW so it is positive
   }
 
-  public void setUpperSpeed(double speed) {
-    m_topMotor.set(speed);
+  public void setTopDutyCycle(double DutyCycle) { // between -1.0 and 1.0
+    m_topMotorCW.set(DutyCycle); // it should be spinning CW, so positive
   }
 
-  public double getBottomSpeed() {
-    return m_bottomMotor1.get();
+  public static double WheelRPMtoDutyCycle(double WheelRPM) {
+    return WheelRPM/ShooterConstants.kWheelMaxRPM;
   }
 
-  public double getUpperSpeed() {
-    return m_topMotor.get();
+  public void setBottomWheelRPM(double WheelRPM) {
+    setBottomDutyCycle(WheelRPMtoDutyCycle(WheelRPM));
   }
 
-  public double getBottomEncoderVelocity() {
-    return m_bottomMotor1.getEncoder().getVelocity()/ShooterConstants.kBottomWheelToMotorConvertion;
+  public double getBottomDutyCycle() {
+    return m_bottomMotorCW.get(); // we are using the CW motor because this is the one that is spinning positively when shooting
   }
 
-  public double getTopEncoderVelocity() {
-    return m_topMotor.getEncoder().getVelocity()/ShooterConstants.kUpperWheelToMotorConvertion;
+  public double getTopDutyCycle() {
+    return m_topMotorCW.get(); // same idea for this one
   }
+
+
+  public double getBottomRPM() {
+    return m_bottomMotorCCW.getEncoder().getVelocity() * ShooterConstants.kBottomMotorToWheelRatio; // this division operator 
+  }
+
+  public double getTopRPM() {
+    return m_topMotorCW.getEncoder().getVelocity() * ShooterConstants.kTopMotorToWheelRatio;
+  }
+
+  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Bottom Motor Speed", getBottomEncoderVelocity());
-    SmartDashboard.putNumber("Upper Motor Speed", getUpperSpeed());
   }
 }

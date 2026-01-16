@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ShooterPID;
-import frc.robot.commands.SmartDashboardShooter;
+//import frc.robot.commands.SmartDashboardShooter;
 import frc.robot.constants.IOConstants;
 import frc.robot.subsystem.Shooter;
 
@@ -22,7 +22,7 @@ public class RobotContainer {
 
   private Shooter m_shooter = new Shooter();
   private ShooterPID m_shooterPID = new ShooterPID(m_shooter);
-  private SmartDashboardShooter m_dashboardShooter = new SmartDashboardShooter(m_shooter);
+  //private SmartDashboardShooter m_dashboardShooter = new SmartDashboardShooter(m_shooter);
 
   public RobotContainer() {
     configureBindings();
@@ -30,7 +30,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     m_joystickButton1.whileTrue(m_shooterPID);
-    m_joystickButton2.whileTrue(m_dashboardShooter);
+    //m_joystickButton2.whileTrue(m_dashboardShooter);
   }
 
   public Command getAutonomousCommand() {
