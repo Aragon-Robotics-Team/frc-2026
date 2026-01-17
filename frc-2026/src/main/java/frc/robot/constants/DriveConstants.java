@@ -9,15 +9,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 /** Add your docs here. */
 public class DriveConstants {
-    public static final int kFrontLeftTurnID = 0;
-    public static final int kFrontRightTurnID = 0;
-    public static final int kBackLeftTurnID = 0;
-    public static final int kBackRightTurnID = 0;
+    public static final int kFrontLeftTurnID = 1;
+    public static final int kFrontRightTurnID = 13;
+    public static final int kBackLeftTurnID = 2;
+    public static final int kBackRightTurnID = 3;
 
-    public static final int kFrontLeftDriveID = 0;
-    public static final int kFrontRightDriveID = 0;
-    public static final int kBackLeftDriveID = 0;
-    public static final int kBackRightDriveID = 0;
+    public static final int kFrontLeftDriveID = 11;
+    public static final int kFrontRightDriveID = 14;
+    public static final int kBackLeftDriveID = 12;
+    public static final int kBackRightDriveID = 52;
 
     public static final int kFrontLeftAbsoluteEncoderPort = 0;
     public static final int kFrontRightAbsoluteEncoderPort = 0;

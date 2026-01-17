@@ -38,10 +38,10 @@ public class SwerveDrive extends SubsystemBase {
       Logger.recordOutput("swerve module states", moduleStates);
   }
 
-    public Rotation2d getMeasuredAngle() {
-        //RETURN ANGLE FROM IMU
-        return m_imu.getRotation2d();
-    }
+  public Rotation2d getMeasuredAngle() {
+    //RETURN ANGLE FROM IMU
+    return m_imu.getRotation2d();
+  }
   
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {}

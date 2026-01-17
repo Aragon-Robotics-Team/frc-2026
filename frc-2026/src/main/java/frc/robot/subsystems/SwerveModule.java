@@ -50,7 +50,7 @@ public class SwerveModule extends SubsystemBase {
     state.optimize(m_currentAngle);
     Logger.recordOutput("current angle", m_currentAngle);
     double m_error = m_pid.calculate(m_currentAngle.getRadians(), state.angle.getRadians());
-    Logger.recordOutput("turn error", m_error);
+    Logger.recordOutput("turn error remaining", m_error);
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
   }
 
