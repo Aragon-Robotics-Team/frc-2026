@@ -56,7 +56,7 @@ public class ShooterPID extends Command {
     // System.out.println("rpm acc" + m_bottom_acceleration_rpm);
     System.out.println(Shooter.WheelRPMtoDutyCycle(m_bottom_acceleration_rpm));
     System.out.println("duty cycle" + Shooter.WheelRPMtoDutyCycle(m_shooter.getBottomRPM()+ m_bottom_acceleration_rpm));
-    SmartDashboard.putNumber("RPM at the Wheel", m_shooter.getBottomRPM());
+    
     
     
     m_shooter.setBottomWheelRPM(targetRPM+m_bottom_acceleration_rpm);

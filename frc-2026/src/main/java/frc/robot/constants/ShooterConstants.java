@@ -11,7 +11,7 @@ public class ShooterConstants {
     public static final int kSparkMaxID_Bottom_CW = 16;
     public static final int kSparkMaxID_Top_CW = 2;
 
-    public static final double kP = 0.6;
+    public static final double kP = 0.55;
     public static final double kI = 0;
     public static final double kD = 0;
 

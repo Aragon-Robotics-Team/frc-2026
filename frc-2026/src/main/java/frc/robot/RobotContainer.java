@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ShooterPID;
 //import frc.robot.commands.SmartDashboardShooter;
 import frc.robot.constants.IOConstants;
+import frc.robot.subsystem.MotorTesting;
 import frc.robot.subsystem.Shooter;
 
 public class RobotContainer {
@@ -22,6 +23,7 @@ public class RobotContainer {
 
   private Shooter m_shooter = new Shooter();
   private ShooterPID m_shooterPID = new ShooterPID(m_shooter);
+  private MotorTesting m_MotorTesting = new MotorTesting();
   //private SmartDashboardShooter m_dashboardShooter = new SmartDashboardShooter(m_shooter);
 
   public RobotContainer() {
