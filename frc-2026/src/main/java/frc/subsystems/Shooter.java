@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
 
   // leftShooterRPM used for calculations
   public double getLeftShooterRPM() {
-    return m_leftMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0;
+    return m_leftMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0; // convert from RPS to RPM
   }
 
   public double getRightShooterRPM() {
