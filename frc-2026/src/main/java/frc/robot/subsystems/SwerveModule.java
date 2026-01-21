@@ -60,13 +60,12 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setModuleState(SwerveModuleState state) {
+    double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
+    state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
     Logger.recordOutput("drive motor speed", m_driveMotorRotationsPerSecond);
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(driveMotorMode).withVelocity(m_driveMotorRotationsPerSecond));
-
-    double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
-    //Rotation2d m_currentAngle = new Rotation2d(m_absoluteEncoder.get() - m_absoluteEncoderOffset);
-    //state.optimize(new Rotation2d(m_currentAngle));
+    
     Logger.recordOutput(m_prefix + "current angle", m_currentAngle);
     double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     Logger.recordOutput(m_prefix + "turn error remaining", m_error);
