@@ -21,6 +21,9 @@ public class RobotContainer {
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
 
+  private JoystickButton m_buttonIntakePivot = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonIntakePivot);
+
+
   private IntakePivot m_intakePivot = new IntakePivot();
   private ArcadeIntakePivot m_arcadeIntakePivot = new ArcadeIntakePivot(m_intakePivot, m_secondaryJoystick);
   private PIDIntakePivot m_PIDIntakePivot = new PIDIntakePivot(m_intakePivot, IntakePivotConstants.kTargetTicks);
@@ -31,12 +34,14 @@ public class RobotContainer {
 
     SendableRegistry.add(m_arcadeIntakePivot.getIntakePivotArcadeSendable(), "IntakePivotArcade");
     Shuffleboard.getTab("SmartDashboard").add(m_arcadeIntakePivot.getIntakePivotArcadeSendable()).withWidget("IntakePivotArcade");
-  SendableRegistry.add(m_PIDIntakePivot.getPIDIntakePivotSendable(), "IntakePivotPID");
+    SendableRegistry.add(m_PIDIntakePivot.getPIDIntakePivotSendable(), "IntakePivotPID");
     Shuffleboard.getTab("SmartDashboard").add(m_PIDIntakePivot.getPIDIntakePivotSendable()).withWidget("IntakePivotPID");
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    m_buttonIntakePivot.whileTrue(m_PIDIntakePivot);
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
