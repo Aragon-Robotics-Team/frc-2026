@@ -8,4 +8,7 @@ package frc.robot.constants;
 public class IOConstants {
     public static final int kDriverJoystickID = 0;
     public static final int kSecondaryJoystickID = 1;
+
+    public static final int kIntakePivotJoystickAxis = 1; // axis to use for the intake pivot
+
 }
