@@ -13,8 +13,11 @@ public class ShooterConstants {
     public static final int kRightMotorCWID = 2;
     public static final int kRightMotorCCWID = 3;
 
-    public static final double kWheelMaxRPM = 6000.0;
     public static final double kMotorToWheelRatio = 30.0 / 18.0;
+    public static final double kKrakenX60MaxRPM = 6000.0;
+    public static final double kWheelMaxRPM = kKrakenX60MaxRPM * kMotorToWheelRatio;
+
+    public static final double kArcadeSpeedModifier = 0.025;
 
     public static final double kP = 0.55;
     public static final double kI = 0.0;
@@ -22,4 +25,6 @@ public class ShooterConstants {
 
     public static final double kTargetRPM = 6000.0;
     public static final double kIdleRPM = 500.0;
+    public static final double kMaxAccel = 12000.0;
+    public static final double kMaxAccelOfAccel = 6000.0;
 }

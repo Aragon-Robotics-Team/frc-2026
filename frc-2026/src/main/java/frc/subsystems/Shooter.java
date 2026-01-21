@@ -17,8 +17,7 @@ public class Shooter extends SubsystemBase {
   private TalonFX m_leftMotorCW = new TalonFX(ShooterConstants.kLeftMotorCWID);
 
   private TalonFX m_rightMotorCCW = new TalonFX(ShooterConstants.kRightMotorCCWID);
-  private TalonFX m_rightMotorCW = new TalonFX(ShooterConstants.kRightMotorCWID);
-  
+  private TalonFX m_rightMotorCW = new TalonFX(ShooterConstants.kRightMotorCWID);  
 
   public Shooter() {
     m_leftMotorCCW.setNeutralMode(NeutralModeValue.Brake);
@@ -28,12 +27,15 @@ public class Shooter extends SubsystemBase {
     m_rightMotorCW.setNeutralMode(NeutralModeValue.Brake);
   }
 
-  public void setDutyCycle(double DutyCycle) { // between -1.0 and 1.0; positive is shooting outwards
-    m_leftMotorCCW.set(DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
-    m_leftMotorCW.set(-DutyCycle);  // the motor spinning CW so it is positive
+  public void setDutyCycle(double dutyCycle) { // between -1.0 and 1.0; positive is shooting outwards
+    if (dutyCycle <= 1.0 && dutyCycle >= -1.0) {
+      System.out.println("DutyCycle" + dutyCycle);
+      m_leftMotorCCW.set(dutyCycle); // the motor is spinning CCW so Duty Cycle is negative
+      m_leftMotorCW.set(-dutyCycle);  // the motor spinning CW so it is positive
 
-    m_rightMotorCCW.set(DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
-    m_rightMotorCW.set(-DutyCycle);  // the motor spinning CW so it is positive
+      m_rightMotorCCW.set(dutyCycle); // the motor is spinning CCW so Duty Cycle is negative
+      m_rightMotorCW.set(-dutyCycle);  // the motor spinning CW so it is positive
+    }
   }
 
   public static double WheelRPMtoDutyCycle(double WheelRPM) {
@@ -52,22 +54,29 @@ public class Shooter extends SubsystemBase {
     return m_rightMotorCW.get();
   }
 
-  // double check later
-  public double getLeftRPM() {
-    return m_leftMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio; // this division operator 
+  // leftShooterRPM used for calculations
+  public double getLeftShooterRPM() {
+    return m_leftMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0;
   }
 
-  public double getRightRPM() {
-    return m_rightMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio;
+  public double getRightShooterRPM() {
+    return m_rightMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0;
   }
  
+  public double getLeftShooterAccel() {
+    return m_leftMotorCCW.getAcceleration().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0;
+  }
+
+  public double getRightShooterAccel() {
+    return m_rightMotorCCW.getAcceleration().getValueAsDouble() * ShooterConstants.kMotorToWheelRatio * 60.0;
+  }
+
   public void setVoltage(double voltage) {
     m_leftMotorCCW.setVoltage(-voltage);
     m_leftMotorCW.setVoltage(voltage);
 
     m_rightMotorCCW.setVoltage(-voltage);
     m_rightMotorCW.setVoltage(voltage);
-
   }
 
   public void setIdleRPM() {
