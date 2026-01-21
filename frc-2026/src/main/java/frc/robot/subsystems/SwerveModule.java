@@ -18,7 +18,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.DriveConstants;
 
@@ -29,16 +28,18 @@ public class SwerveModule extends SubsystemBase {
   private DutyCycleEncoder m_absoluteEncoder;
   private PIDController m_pid = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
   private double m_absoluteEncoderOffset;
+  private int m_driveReversed;
   private final VelocityVoltage m_driveVelocityInput = new VelocityVoltage(0);
   private final DutyCycleOut m_turnMotorInput = new DutyCycleOut(0);
   private String m_prefix;
   /** Creates a new SwerveModule. */
 
-  public SwerveModule(int turnMotorID, int driveMotorID, int absoluteEncoderID, double absoluteEncoderOffset, String location) {
+  public SwerveModule(int turnMotorID, int driveMotorID, int absoluteEncoderID, double absoluteEncoderOffset, int driveReversed, String location) {
     m_turnMotor = new TalonFX(turnMotorID);
     m_driveMotor = new TalonFX(driveMotorID);
     m_absoluteEncoder = new DutyCycleEncoder(absoluteEncoderID, 2 * Math.PI, 0);
     m_absoluteEncoderOffset = absoluteEncoderOffset;
+    m_driveReversed = driveReversed;
     m_pid.enableContinuousInput(-Math.PI, Math.PI);
     m_prefix = location;
 
@@ -63,9 +64,9 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput("drive motor speed", m_driveMotorRotationsPerSecond);
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(driveMotorMode).withVelocity(m_driveMotorRotationsPerSecond));
 
-    double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset;
+    double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
     //Rotation2d m_currentAngle = new Rotation2d(m_absoluteEncoder.get() - m_absoluteEncoderOffset);
-    //state.optimize(m_currentAngle);
+    //state.optimize(new Rotation2d(m_currentAngle));
     Logger.recordOutput(m_prefix + "current angle", m_currentAngle);
     double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     Logger.recordOutput(m_prefix + "turn error remaining", m_error);
@@ -74,5 +75,6 @@ public class SwerveModule extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Logger.recordOutput(m_prefix, m_absoluteEncoder.get());
   }
 }

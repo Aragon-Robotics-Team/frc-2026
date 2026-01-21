@@ -32,7 +32,8 @@ public class SwerveJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(-m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed, -m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxMotorSpeed, -m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxMotorSpeed);
+    ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed, m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxMotorSpeed, m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxMotorSpeed);
+    //ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(0.2, 0, 0);
     m_swerveDrive.driveRobot(m_chassisSpeed);
     Logger.recordOutput("chassis speed", m_chassisSpeed);
     Logger.recordOutput("vx", -m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed);

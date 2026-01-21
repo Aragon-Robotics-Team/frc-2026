@@ -18,14 +18,15 @@ public class SwerveDrive extends SubsystemBase {
 
   private Canandgyro m_imu = new Canandgyro(DriveConstants.kGyroID);
 
-  private SwerveModule m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftTurnID, DriveConstants.kFrontLeftDriveID, DriveConstants.kFrontLeftAbsoluteEncoderPort, DriveConstants.kFrontLeftEncoderOffset, "front left");
-  private SwerveModule m_frontRight = new SwerveModule(DriveConstants.kFrontRightTurnID, DriveConstants.kFrontRightDriveID, DriveConstants.kFrontRightAbsoluteEncoderPort, DriveConstants.kFrontRightEncoderOffset, "front right");
-  private SwerveModule m_backLeft = new SwerveModule(DriveConstants.kBackLeftTurnID, DriveConstants.kBackLeftDriveID, DriveConstants.kBackLeftAbsoluteEncoderPort, DriveConstants.kBackLeftEncoderOffset, "back left");
-  private SwerveModule m_backRight = new SwerveModule(DriveConstants.kBackRightTurnID, DriveConstants.kBackRightDriveID, DriveConstants.kBackRightAbsoluteEncoderPort, DriveConstants.kBackRightEncoderOffset, "back right");
+  private SwerveModule m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftTurnID, DriveConstants.kFrontLeftDriveID, DriveConstants.kFrontLeftAbsoluteEncoderPort, DriveConstants.kFrontLeftEncoderOffset, DriveConstants.kFrontLeftDriveReversed, "front left");
+  private SwerveModule m_frontRight = new SwerveModule(DriveConstants.kFrontRightTurnID, DriveConstants.kFrontRightDriveID, DriveConstants.kFrontRightAbsoluteEncoderPort, DriveConstants.kFrontRightEncoderOffset, DriveConstants.kFrontRightDriveReversed, "front right");
+  private SwerveModule m_backLeft = new SwerveModule(DriveConstants.kBackLeftTurnID, DriveConstants.kBackLeftDriveID, DriveConstants.kBackLeftAbsoluteEncoderPort, DriveConstants.kBackLeftEncoderOffset, DriveConstants.kBackLeftDriveReversed, "back left");
+  private SwerveModule m_backRight = new SwerveModule(DriveConstants.kBackRightTurnID, DriveConstants.kBackRightDriveID, DriveConstants.kBackRightAbsoluteEncoderPort, DriveConstants.kBackRightEncoderOffset, DriveConstants.kBackRightDriveReversed, "back right");
   
   public void driveRobot(ChassisSpeeds chassisSpeed) {
       //CREATE CODE TO COMMAND SWERVE MODULES TO MOVE BASED ON CHASSIS SPEEDS
       SwerveModuleState[] moduleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeed);
+      
       m_frontLeft.setModuleState(moduleStates[0]);
       m_frontRight.setModuleState(moduleStates[1]);
       m_backLeft.setModuleState(moduleStates[2]);
