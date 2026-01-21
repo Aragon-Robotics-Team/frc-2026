@@ -80,7 +80,7 @@ public class ShooterPID extends Command {
     @Override
     public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType("ShooterPID");
-      builder.addDoubleProperty("Target RPM", () -> m_targetRPM, (double setpoint) -> m_shooter.setRPM(setpoint));
+      builder.addDoubleProperty("Target RPM", () -> m_targetRPM, (double targetRPM) -> m_targetRPM = targetRPM);
       builder.addDoubleProperty("Left Shooter RPM", () -> m_shooter.getLeftShooterRPM(), null);
       builder.addDoubleProperty("Right Shooter RPM", () -> m_shooter.getRightShooterRPM(), null);
     }
