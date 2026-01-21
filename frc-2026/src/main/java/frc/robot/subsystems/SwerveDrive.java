@@ -18,10 +18,10 @@ public class SwerveDrive extends SubsystemBase {
 
   private Canandgyro m_imu = new Canandgyro(DriveConstants.kGyroID);
 
-  private SwerveModule m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftTurnID, DriveConstants.kFrontLeftDriveID, DriveConstants.kFrontLeftAbsoluteEncoderPort, DriveConstants.kFrontLeftEncoderOffset);
-  private SwerveModule m_frontRight = new SwerveModule(DriveConstants.kFrontRightTurnID, DriveConstants.kFrontRightDriveID, DriveConstants.kFrontRightAbsoluteEncoderPort, DriveConstants.kFrontRightEncoderOffset);
-  private SwerveModule m_backLeft = new SwerveModule(DriveConstants.kBackLeftTurnID, DriveConstants.kBackLeftDriveID, DriveConstants.kBackLeftAbsoluteEncoderPort, DriveConstants.kBackLeftEncoderOffset);
-  private SwerveModule m_backRight = new SwerveModule(DriveConstants.kBackRightTurnID, DriveConstants.kBackRightDriveID, DriveConstants.kBackRightAbsoluteEncoderPort, DriveConstants.kBackRightEncoderOffset);
+  private SwerveModule m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftTurnID, DriveConstants.kFrontLeftDriveID, DriveConstants.kFrontLeftAbsoluteEncoderPort, DriveConstants.kFrontLeftEncoderOffset, "front left");
+  private SwerveModule m_frontRight = new SwerveModule(DriveConstants.kFrontRightTurnID, DriveConstants.kFrontRightDriveID, DriveConstants.kFrontRightAbsoluteEncoderPort, DriveConstants.kFrontRightEncoderOffset, "front right");
+  private SwerveModule m_backLeft = new SwerveModule(DriveConstants.kBackLeftTurnID, DriveConstants.kBackLeftDriveID, DriveConstants.kBackLeftAbsoluteEncoderPort, DriveConstants.kBackLeftEncoderOffset, "back left");
+  private SwerveModule m_backRight = new SwerveModule(DriveConstants.kBackRightTurnID, DriveConstants.kBackRightDriveID, DriveConstants.kBackRightAbsoluteEncoderPort, DriveConstants.kBackRightEncoderOffset, "back right");
   
   public void driveRobot(ChassisSpeeds chassisSpeed) {
       //CREATE CODE TO COMMAND SWERVE MODULES TO MOVE BASED ON CHASSIS SPEEDS

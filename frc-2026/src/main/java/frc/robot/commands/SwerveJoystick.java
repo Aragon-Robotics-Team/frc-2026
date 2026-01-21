@@ -35,6 +35,9 @@ public class SwerveJoystick extends Command {
     ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(-m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed, -m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxMotorSpeed, -m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxMotorSpeed);
     m_swerveDrive.driveRobot(m_chassisSpeed);
     Logger.recordOutput("chassis speed", m_chassisSpeed);
+    Logger.recordOutput("vx", -m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed);
+    Logger.recordOutput("vy", -m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxMotorSpeed);
+    Logger.recordOutput("rotation", -m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxMotorSpeed);
   }
 
   // Called once the command ends or is interrupted.
