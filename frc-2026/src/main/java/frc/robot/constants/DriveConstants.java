@@ -13,7 +13,7 @@ public class DriveConstants {
     public static final int kFrontLeftTurnID = 11;
     public static final int kFrontRightTurnID = 14;
     public static final int kBackLeftTurnID = 12;
-    public static final int kBackRightTurnID = 52;
+    public static final int kBackRightTurnID = 13;
 
     public static final int kFrontLeftDriveID = 1;
     public static final int kFrontRightDriveID = 5;
