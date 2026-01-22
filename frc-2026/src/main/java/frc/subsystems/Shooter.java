@@ -79,13 +79,13 @@ public class Shooter extends SubsystemBase {
     m_rightMotorCW.setVoltage(voltage);
   }
 
-  public void setIdleRPM() {
-    setDutyCycle(WheelRPMtoDutyCycle(ShooterConstants.kIdleRPM));
-  }
+  // public void setIdleRPM() {
+  //   setDutyCycle(WheelRPMtoDutyCycle(ShooterConstants.kIdleRPM));
+  // }
 
-  public InstantCommand idle() {
-    return new InstantCommand(this::setIdleRPM, this);
-  }
+  // public InstantCommand idle() {
+  //   return new InstantCommand(this::setIdleRPM, this);
+  // }
 
   @Override
   public void periodic() {

@@ -22,12 +22,12 @@ public class RobotContainer {
 
   private Shooter m_shooter = new Shooter();
   private ShooterPID m_shooterPID = new ShooterPID(m_shooter, ShooterConstants.kTargetRPM);
+  private ShooterPID m_shooterIdle = new ShooterPID(m_shooter, ShooterConstants.kIdleRPM);
 
   private JoystickButton m_buttonShooter = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonNumShooter);
 
   public RobotContainer() {
-    m_shooter.setDefaultCommand(m_shooter.idle());
-    m_shooter.setDefaultCommand(m_shooterPID);
+    m_shooter.setDefaultCommand(m_shooterIdle);
     SendableRegistry.add(m_shooterPID.getSendable(), "ShooterPID");
     Shuffleboard.getTab("SmartDashboard").add(m_shooterPID.getSendable()).withWidget("ShooterPID");
     configureBindings();
@@ -35,7 +35,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     m_buttonShooter.whileTrue(m_shooterPID);
-    m_buttonShooter.onFalse(m_shooter.idle());
+    m_buttonShooter.onFalse(m_shooterIdle);
   }
 
   public Command getAutonomousCommand() {
