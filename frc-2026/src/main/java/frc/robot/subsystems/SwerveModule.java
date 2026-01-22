@@ -113,9 +113,7 @@ public class SwerveModule extends SubsystemBase {
     this.initDrivePID(m_driveMotor);
   }
   
-  private int driveMotorMode = 0;{
-
-  if (DriverStation.isTest()) {driveMotorMode = 1;}}
+  private int driveMotorMode = 0;
 
   private void initDrivePID(TalonFX driveCTalonFX) {
     Slot0Configs slot0Configs = new Slot0Configs();
@@ -135,22 +133,26 @@ public class SwerveModule extends SubsystemBase {
     double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
 
+    logData(state, m_currentAngle, m_error);
+  }
+
+  private void logData(SwerveModuleState moduleState, double currentAngle, double error) {
     //log turn pid info
-    Logger.recordOutput(m_prefix+"turn/commandedAngleOfTheWheelInDegrees", state.angle);
+    Logger.recordOutput(m_prefix+"turn/commandedAngleOfTheWheelInDegrees", moduleState.angle);
     Logger.recordOutput(m_prefix+"turn/Pid/errorDerivative", m_pid.getErrorDerivative());
     Logger.recordOutput(m_prefix+"turn/Pid/error", m_pid.getError());
     Logger.recordOutput(m_prefix+"turn/Pid/accumulatedError", m_pid.getAccumulatedError());
     Logger.recordOutput(m_prefix+"turn/Pid/errorTolerance", m_pid.getErrorTolerance());
     Logger.recordOutput(m_prefix+"turn/Pid/errorDerivativeTolerance", m_pid.getErrorDerivativeTolerance());
     Logger.recordOutput(m_prefix+"turn/Pid/iZone", m_pid.getIZone());
-    Logger.recordOutput(m_prefix+"turn/Pid/calculatedPidValue", m_error);
+    Logger.recordOutput(m_prefix+"turn/Pid/calculatedPidValue", error);
     Logger.recordOutput(m_prefix+"turn/Pid/kP", m_pid.getP());
 
     //log absolute encoder info
-    Logger.recordOutput(m_prefix+"/absoluteEncoder/dutyCyclePosition", m_currentAngle / 2 * Math.PI); //0 to 1
+    Logger.recordOutput(m_prefix+"/absoluteEncoder/dutyCyclePosition", currentAngle / 2 * Math.PI); //0 to 1
     Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderDutyCycleOffset", m_absoluteEncoderOffset);
-    Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInDegrees", m_currentAngle / Math.PI * 180);
-    Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", m_currentAngle);
+    Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInDegrees", currentAngle / Math.PI * 180);
+    Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", currentAngle);
     Logger.recordOutput(m_prefix+"/absoluteEncoder/encoderGet", m_absoluteEncoder.get());
     Logger.recordOutput(m_prefix+"/absoluteEncoder/offset", m_absoluteEncoderOffset);
   }
