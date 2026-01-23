@@ -19,4 +19,7 @@ public class IntakePivotConstants {
     public static final double kD = 0;
     public static final double kPIDIZone = 0;
     public static final double kTargetTicks = 0;
+
+    public static final double kMaxVelocity = 1;
+    public static final double kMaxAcceleration = 0.5;
 }
