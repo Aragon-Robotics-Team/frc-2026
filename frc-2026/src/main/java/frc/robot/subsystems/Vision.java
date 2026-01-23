@@ -15,82 +15,86 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
-  private PhotonCamera m_cam = new PhotonCamera(VisionConstants.kCamName);
-  private PhotonPoseEstimator m_photonEstimator = new PhotonPoseEstimator(VisionConstants.kFieldLayout, VisionConstants.kRobotToCam);
-  private Matrix<N3, N1> curStdDevs;
+  private PhotonCamera m_leftCam = new PhotonCamera(VisionConstants.kLeftCamName);
+  private PhotonPoseEstimator m_leftPhotonEstimator = new PhotonPoseEstimator(VisionConstants.kFieldLayout, VisionConstants.kLeftRobotToCam);
+  
+  private PhotonCamera m_rightCam = new PhotonCamera(VisionConstants.kRightCamName);
+  private PhotonPoseEstimator m_rightPhotonPoseEstimator = new PhotonPoseEstimator(VisionConstants.kFieldLayout, VisionConstants.kRightRobotToCam);
 
   private EstimateConsumer m_estimateConsumer;
 
-  private Optional<EstimatedRobotPose> m_visionEstimate = Optional.empty();
+  private Optional<EstimatedRobotPose> m_leftVisionEstimate = Optional.empty();
+  private Optional<EstimatedRobotPose> m_rightVisionEstimate = Optional.empty();
 
   /** Creates a new Vision. */
   public Vision(EstimateConsumer estimateConsumer) {
     m_estimateConsumer = estimateConsumer;
   }
 
-  public void updateStandardDevs(
-    Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
-      if (estimatedPose.isEmpty()) {
-        curStdDevs = VisionConstants.kSingleTagStdDevs;
+  public Matrix<N3, N1> updateStandardDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets, PhotonPoseEstimator estimator, Matrix<N3, N1> singleTagStdDevs, Matrix<N3, N1> multiTagStdDevs) {
+    Matrix<N3, N1> curStdDevs = singleTagStdDevs;
+
+    if (estimatedPose.isPresent()) {
+      //pose present. Start running heuristic
+      Matrix<N3, N1> estStdDevs = singleTagStdDevs;
+      int numTags = 0;
+      double avgDist = 0;
+
+      //precalculation - count tags found, calculate avg distance
+      for (PhotonTrackedTarget tgt : targets) {
+        Optional<Pose3d> tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        if (tagPose.isEmpty()) 
+          continue;
+        numTags ++;
+        avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+      }
+
+      if (numTags == 0) {
+        //No tags visible. Default to single-tag std devs
+        curStdDevs = singleTagStdDevs;
       }
       else {
-        //pose present. Start running heuristic
-        var estStdDevs = VisionConstants.kSingleTagStdDevs;
-        int numTags = 0;
-        double avgDist = 0;
-
-        //precalculation - count tags found, calculate avg distance
-        for (PhotonTrackedTarget tgt : targets) {
-          var tagPose = m_photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
-          if (tagPose.isEmpty()) 
-            continue;
-          numTags ++;
-          avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
-        }
-
-        if (numTags == 0) {
-          //No tags visible. Default to single-tag std devs
-          curStdDevs = VisionConstants.kSingleTagStdDevs;
-        }
+        //Tags visible, run full heuristic
+        avgDist /= numTags;
+        
+        if (numTags > 1)
+          estStdDevs = multiTagStdDevs;
+        if (numTags == 1 && avgDist > 4)
+          estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
         else {
-          //Tags visible, run full heuristic
-          avgDist /= numTags;
-          
-          if (numTags > 1)
-            estStdDevs = VisionConstants.kMultiTagStdDevs;
-          if (numTags == 1 && avgDist > 4)
-            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-          else {
-            estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-          }
+          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
         }
       }
-
+    }
+    return curStdDevs;  
   }
 
-  public Matrix<N3, N1> getStandardDevs() {
-    return null;
+  public void estimatePoseFromResults(PhotonCamera cam, Optional<EstimatedRobotPose> estimate, PhotonPoseEstimator estimator, Matrix<N3, N1> singleTagStdDevs, Matrix<N3, N1> multiTagStdDevs) {
+    for (var result : cam.getAllUnreadResults()) {
+      estimate = estimator.estimateCoprocMultiTagPose(result);
+
+      if (estimate.isEmpty()) {
+        estimate = estimator.estimateLowestAmbiguityPose(result);
+      }
+
+      if (estimate.isPresent()) {
+        m_estimateConsumer.accept(estimate.get().estimatedPose.toPose2d(), estimate.get().timestampSeconds, updateStandardDevs(estimate, result.getTargets(), estimator, singleTagStdDevs, multiTagStdDevs));
+      }      
+    }  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-      for (var result : m_cam.getAllUnreadResults()) {
-        m_visionEstimate = m_photonEstimator.estimateCoprocMultiTagPose(result);
-        if (m_visionEstimate.isEmpty()) {
-          m_visionEstimate = m_photonEstimator.estimateLowestAmbiguityPose(result);
-        }
-
-        if (m_visionEstimate.isPresent()) {
-          m_estimateConsumer.accept(m_visionEstimate.get().estimatedPose.toPose2d(), m_visionEstimate.get().timestampSeconds, getStandardDevs());
-        }      
-      }  
+    estimatePoseFromResults(m_leftCam, m_leftVisionEstimate, m_leftPhotonEstimator, VisionConstants.kLeftSingleTagStdDevs, VisionConstants.kLeftMultiTagStdDevs);
+    estimatePoseFromResults(m_rightCam, m_rightVisionEstimate, m_rightPhotonPoseEstimator, VisionConstants.kRightSingleTagStdDevs, VisionConstants.kRightMultiTagStdDevs);
 
   }
 
