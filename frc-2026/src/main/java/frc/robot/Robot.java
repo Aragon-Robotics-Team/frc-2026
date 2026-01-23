@@ -8,6 +8,7 @@ import java.io.File;
 
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +29,8 @@ public class Robot extends LoggedRobot {
       directory.mkdir();
     }
 
-    Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs")); 
+    Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
+    Logger.addDataReceiver(new NT4Publisher());
     Logger.start();
   }
 
