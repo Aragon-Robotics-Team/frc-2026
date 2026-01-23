@@ -25,10 +25,17 @@ public class DriveConstants {
     public static final int kBackLeftAbsoluteEncoderPort = 2;
     public static final int kBackRightAbsoluteEncoderPort = 3;
 
+<<<<<<< HEAD
     public static final double kFrontLeftEncoderOffset = 5.26;
     public static final double kFrontRightEncoderOffset = 0.23 + Math.PI;
     public static final double kBackLeftEncoderOffset = 2.35;
     public static final double kBackRightEncoderOffset = 2.82 + Math.PI;
+=======
+    public static final double kFrontLeftEncoderOffset = 5.26 + Math.PI;
+    public static final double kFrontRightEncoderOffset = 0.23;
+    public static final double kBackLeftEncoderOffset = 2.35 + Math.PI;
+    public static final double kBackRightEncoderOffset = 2.82;
+>>>>>>> d15964df9e7ab8d0afafa0522bd2e3cbd2046dcf
 
     public static final int kFrontLeftDriveReversed = 1;
     public static final int kFrontRightDriveReversed = -1;
