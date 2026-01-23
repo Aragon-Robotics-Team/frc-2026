@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,8 +15,8 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class RobotContainer {
 
-  private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
-  private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
+  private XboxController m_driverJoystick = new XboxController(IOConstants.kDriverJoystickID);
+  private XboxController m_secondaryJoystick = new XboxController(IOConstants.kSecondaryJoystickID);
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_driverJoystick);

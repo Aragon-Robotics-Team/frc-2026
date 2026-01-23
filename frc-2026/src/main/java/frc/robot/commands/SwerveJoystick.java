@@ -7,7 +7,7 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.SwerveDrive;
@@ -16,9 +16,9 @@ import frc.robot.subsystems.SwerveDrive;
 public class SwerveJoystick extends Command {
 
   private final SwerveDrive m_swerveDrive;
-  private Joystick m_joystick;
+  private XboxController m_joystick;
   /** Creates a new SwerveJoystick. */
-  public SwerveJoystick(SwerveDrive swerveDrive, Joystick joystick) {
+  public SwerveJoystick(SwerveDrive swerveDrive, XboxController joystick) {
     m_swerveDrive = swerveDrive;
     m_joystick = joystick;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,7 +32,7 @@ public class SwerveJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(m_joystick.getRawAxis(DriveConstants.kLeftYAxisID) * DriveConstants.kMaxMotorSpeed, m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxMotorSpeed, m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxMotorSpeed);
+    ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(m_joystick.getLeftY() * DriveConstants.kMaxMotorSpeed, m_joystick.getLeftX() * DriveConstants.kMaxMotorSpeed, m_joystick.getRightX() * DriveConstants.kMaxMotorSpeed);
     //ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(0.2, 0, 0);
     m_swerveDrive.driveRobot(ChassisSpeeds.fromFieldRelativeSpeeds(m_chassisSpeed, m_swerveDrive.getMeasuredAngle()));
     Logger.recordOutput("chassis speed", m_chassisSpeed);
