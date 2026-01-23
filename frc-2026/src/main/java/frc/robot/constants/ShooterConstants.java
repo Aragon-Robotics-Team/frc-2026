@@ -27,4 +27,8 @@ public class ShooterConstants {
     public static final double kIdleRPM = 500.0;
     public static final double kMaxVel = 12000.0;
     public static final double kMaxAccel = 6000.0;
+
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
 }

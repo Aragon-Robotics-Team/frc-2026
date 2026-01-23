@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -20,12 +21,14 @@ public class ShooterTrapezoidalPID extends Command {
   private TrapezoidProfile m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(ShooterConstants.kMaxVel, ShooterConstants.kMaxAccel));
   private Timer m_timer = new Timer();
   private PIDController m_pidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
-  
+  private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
+
+  private double m_speed;
   private double m_accelerationRPM;
   private double m_targetRPM;
   private TrapezoidProfile.State m_startState;
   private TrapezoidProfile.State m_goalState;
-  private TrapezoidProfile.State m_setpoint;
+  private TrapezoidProfile.State m_setpointState;
 
   private ShooterPIDSendable m_shooterPIDSendable = new ShooterPIDSendable();
 
@@ -48,8 +51,8 @@ public class ShooterTrapezoidalPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_setpoint = m_trapezoidProfile.calculate(m_timer.get(), m_startState, m_goalState);
-    m_accelerationRPM = m_pidController.calculate(m_shooter.getLeftShooterRPM(), m_setpoint.velocity);
+    m_setpointState = m_trapezoidProfile.calculate(m_timer.get(), m_startState, m_goalState);
+    m_accelerationRPM = m_pidController.calculate(m_shooter.getLeftShooterRPM(), m_setpointState.velocity);
     //System.out.println(Shooter.WheelRPMtoDutyCycle(m_accelerationRPM));
     //System.out.println("duty cycle" + Shooter.WheelRPMtoDutyCycle(m_shooter.getLeftShooterRPM()+ m_accelerationRPM));
 
@@ -60,7 +63,8 @@ public class ShooterTrapezoidalPID extends Command {
     // System.out.println("Set speed: " + m_accelerationRPM + m_shooter.getLeftShooterRPM());
     // System.out.println();
     // m_shooter.setRPM(m_speedState.position);
-    m_shooter.setRPM(m_accelerationRPM + m_shooter.getLeftShooterRPM());   
+    m_speed = m_feedForward.calculateWithVelocities(m_shooter.getLeftShooterRPM(), m_shooter.getLeftShooterRPM() + m_accelerationRPM);
+    m_shooter.setRPM(m_speed);
   }
 
   // Called once the command ends or is interrupted.
