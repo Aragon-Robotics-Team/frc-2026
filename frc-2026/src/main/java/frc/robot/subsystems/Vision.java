@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -15,12 +14,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
 
@@ -31,8 +26,6 @@ public class Vision extends SubsystemBase {
   private EstimateConsumer m_estimateConsumer;
 
   private Optional<EstimatedRobotPose> m_visionEstimate = Optional.empty();
-
-  private Field2d m_field = new Field2d();
 
   /** Creates a new Vision. */
   public Vision(EstimateConsumer estimateConsumer) {
@@ -59,8 +52,6 @@ public class Vision extends SubsystemBase {
         if (m_visionEstimate.isPresent()) {
           m_estimateConsumer.accept(m_visionEstimate.get().estimatedPose.toPose2d(), m_visionEstimate.get().timestampSeconds, getStandardDevs());
         }      
-        m_field.setRobotPose(m_visionEstimate.get().estimatedPose.toPose2d());
-        SmartDashboard.putData("Field", m_field);
       }  
 
   }

@@ -20,13 +20,11 @@ public class RobotContainer {
   private XboxController m_secondaryJoystick = new XboxController(IOConstants.kSecondaryJoystickID);
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
-  private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_driverJoystick);
-
+  private Vision m_vision = new Vision(m_swerveDrive::addVisionMeasurement);
+  private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_vision, m_driverJoystick);
 
   private final JoystickButton m_resetHeadingButton = new JoystickButton(m_driverJoystick, IOConstants.kResetHeadingButtonID);
   private final InstantCommand m_resetHeadingCommand = m_swerveDrive.resetHeadingCommand();
-
-  private Vision m_vision = new Vision(null);
 
   public RobotContainer() {
     configureBindings();
