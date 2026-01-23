@@ -9,7 +9,7 @@ public class ShooterPivotConstants {
 
     public static final int kServoChannel = 0;
 
-    public static final double kArcadeSpeedMultiplier = 0.2; // I have no idea if this is needed
+    public static final double kArcadePositionMultiplier = 0.2; // I have no idea if this is needed
 
     public static final double kToPositionTargetHeight = 0.7;
 }

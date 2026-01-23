@@ -38,11 +38,8 @@ public class ArcadeShooterPivot extends Command {
   @Override
   public void execute() {
     if(m_joystick.getRawAxis(IOConstants.kShooterPivotAxis)!=0) {
-      m_position += ShooterPivotConstants.kArcadeSpeedMultiplier * m_joystick.getRawAxis(IOConstants.kShooterPivotAxis);
+      m_position += ShooterPivotConstants.kArcadePositionMultiplier * m_joystick.getRawAxis(IOConstants.kShooterPivotAxis);
       m_shooterPivot.setPosition(m_position);
-    } else {
-      m_position = m_shooterPivot.getPosition();
-      m_shooterPivot.setPosition(m_shooterPivot.getPosition());
     }
   }
 
