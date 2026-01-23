@@ -13,6 +13,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -22,6 +23,7 @@ import frc.robot.constants.VisionConstants;
 public class Vision extends SubsystemBase {
   private PhotonCamera m_cam = new PhotonCamera(VisionConstants.kCamName);
   private PhotonPoseEstimator m_photonEstimator = new PhotonPoseEstimator(VisionConstants.kFieldLayout, VisionConstants.kRobotToCam);
+  private Matrix<N3, N1> curStdDevs;
 
   private EstimateConsumer m_estimateConsumer;
 
@@ -32,7 +34,43 @@ public class Vision extends SubsystemBase {
     m_estimateConsumer = estimateConsumer;
   }
 
-  public void updateStandardDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+  public void updateStandardDevs(
+    Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+      if (estimatedPose.isEmpty()) {
+        curStdDevs = VisionConstants.kSingleTagStdDevs;
+      }
+      else {
+        //pose present. Start running heuristic
+        var estStdDevs = VisionConstants.kSingleTagStdDevs;
+        int numTags = 0;
+        double avgDist = 0;
+
+        //precalculation - count tags found, calculate avg distance
+        for (PhotonTrackedTarget tgt : targets) {
+          var tagPose = m_photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+          if (tagPose.isEmpty()) 
+            continue;
+          numTags ++;
+          avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+        }
+
+        if (numTags == 0) {
+          //No tags visible. Default to single-tag std devs
+          curStdDevs = VisionConstants.kSingleTagStdDevs;
+        }
+        else {
+          //Tags visible, run full heuristic
+          avgDist /= numTags;
+          
+          if (numTags > 1)
+            estStdDevs = VisionConstants.kMultiTagStdDevs;
+          if (numTags == 1 && avgDist > 4)
+            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+          else {
+            estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+          }
+        }
+      }
 
   }
 
