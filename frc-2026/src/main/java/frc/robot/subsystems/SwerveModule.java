@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -135,6 +136,35 @@ public class SwerveModule extends SubsystemBase {
   }
 
   private void logData(SwerveModuleState moduleState, double currentAngle, double error) {
+    BaseStatusSignal.refreshAll(driveAngularAcceleration,
+      driveAngularVelocity,
+      driveBridgeOutput,
+      driveControlSystemProportionalOutput,
+      driveControlSystemReference,
+      driveControlSystemTotalOutput,
+      driveDutyCycle,
+      drivePidDerivativeOutput,
+      drivePidError,
+      drivePidIntegralOutput,
+      drivePidOutput,
+      drivePidProportionalOutput,
+      drivePidReference,
+      drivePidReferenceSlope,
+      drivePosition,
+      driveSupplyCurrent,
+      driveSupplyVoltage,
+      driveTorqueCurrent,
+      driveVoltage,
+      turnAcceleration,
+      turnAngularVelocity,
+      turnBridgeOutput,
+      turnDutyCycle,
+      turnRelativeEncoderPosition,
+      turnSupplyCurrent,
+      turnSupplyVoltage,
+      turnVoltage,
+      turnTorqueCurrent);
+
     //log turn pid info
     Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivative", m_pid.getErrorDerivative());
     Logger.recordOutput(m_prefix+"/turn/Pid/error", m_pid.getError());
@@ -178,6 +208,7 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput(m_prefix+"/drive/supplyCurrent", driveSupplyCurrent.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/supplyVoltage", driveSupplyVoltage.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/torqueCurrent", driveTorqueCurrent.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/speedMetersPerSecond", moduleState.speedMetersPerSecond);
 
     //drive pid info
     Logger.recordOutput(m_prefix+"/drive/Pid/derivativeOutput", drivePidDerivativeOutput.getValueAsDouble());

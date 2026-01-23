@@ -48,6 +48,8 @@ public class DriveConstants {
     public static final int kLeftXAxisID = 0;
     public static final int kRightXAxisID = 4;
 
+    public static final double kSpeedLimiter = 0.25;
+
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
     new Translation2d(0.295, 0.292),
     new Translation2d(0.295, -0.292),
