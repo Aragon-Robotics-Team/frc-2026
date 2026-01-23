@@ -42,13 +42,13 @@ public class DriveConstants {
     public static final double kWheelDiameter = Units.inchesToMeters(4);
     public static final int kGyroID = 0;
     public static final double kMaxMotorSpeed = 5; //tentative
-    public static final int kGearRatio = 6; //tentative
+    public static final double kGearRatio = 5.36; //tentative
 
     public static final int kLeftYAxisID = 1;
     public static final int kLeftXAxisID = 0;
     public static final int kRightXAxisID = 4;
 
-    public static final double kSpeedLimiter = 0.25;
+    public static final double kSpeedLimiter = 0.2;
 
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
     new Translation2d(0.295, 0.292),

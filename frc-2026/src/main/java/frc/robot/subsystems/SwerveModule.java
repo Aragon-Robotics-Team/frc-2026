@@ -132,10 +132,10 @@ public class SwerveModule extends SubsystemBase {
     double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
 
-    logData(state, m_currentAngle, m_error);
+    logData(state, m_currentAngle, m_error, m_driveMotorRotationsPerSecond);
   }
 
-  private void logData(SwerveModuleState moduleState, double currentAngle, double error) {
+  private void logData(SwerveModuleState moduleState, double currentAngle, double error, double motorRotationsPerSecond) {
     BaseStatusSignal.refreshAll(driveAngularAcceleration,
       driveAngularVelocity,
       driveBridgeOutput,
@@ -196,6 +196,8 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput(m_prefix+"/turn/torqueCurrent", turnTorqueCurrent.getValueAsDouble());
     
     //log drive info
+    Logger.recordOutput(m_prefix+"/drive/angularVelocityMetersPerSecond", driveAngularVelocity.getValueAsDouble() * (2 * Math.PI) * (DriveConstants.kWheelDiameter * Math.PI) / DriveConstants.kGearRatio);
+    Logger.recordOutput(m_prefix+"/drive/commandedMotorRotationsPerSecond", motorRotationsPerSecond);
     Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/position", drivePosition.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/angularAcceleration", driveAngularAcceleration.getValueAsDouble());
