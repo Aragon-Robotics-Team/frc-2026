@@ -23,7 +23,7 @@ public class ShooterTrapezoidalPID extends Command {
   private PIDController m_pidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
   private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
 
-  private double m_speed;
+  private double m_feedForwardOutput;
   private double m_accelerationRPM;
   private double m_targetRPM;
   private TrapezoidProfile.State m_startState;
@@ -63,8 +63,8 @@ public class ShooterTrapezoidalPID extends Command {
     // System.out.println("Set speed: " + m_accelerationRPM + m_shooter.getLeftShooterRPM());
     // System.out.println();
     // m_shooter.setRPM(m_speedState.position);
-    m_speed = m_feedForward.calculateWithVelocities(m_shooter.getLeftShooterRPM(), m_shooter.getLeftShooterRPM() + m_accelerationRPM);
-    m_shooter.setRPM(m_speed);
+    m_feedForwardOutput = m_feedForward.calculateWithVelocities(m_shooter.getLeftShooterRPM(), m_shooter.getLeftShooterRPM() + m_accelerationRPM);
+    m_shooter.setRPM(m_feedForwardOutput + m_accelerationRPM + m_shooter.getLeftShooterRPM());
   }
 
   // Called once the command ends or is interrupted.
