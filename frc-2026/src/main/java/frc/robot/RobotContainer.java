@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.commands.ShooterPID;
+import frc.robot.commands.ShooterTrapezoidalPID;
 import frc.robot.constants.IOConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.subsystems.Shooter;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
 
@@ -21,10 +21,10 @@ public class RobotContainer {
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
 
   private Shooter m_shooter = new Shooter();
-  private ShooterPID m_shooterPID = new ShooterPID(m_shooter, ShooterConstants.kTargetRPM);
-  private ShooterPID m_shooterIdle = new ShooterPID(m_shooter, ShooterConstants.kIdleRPM);
+  private ShooterTrapezoidalPID m_shooterPID = new ShooterTrapezoidalPID(m_shooter, ShooterConstants.kTargetRPM);
+  private ShooterTrapezoidalPID m_shooterIdle = new ShooterTrapezoidalPID(m_shooter, ShooterConstants.kIdleRPM);
 
-  private JoystickButton m_buttonShooter = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonNumShooter);
+  private JoystickButton m_buttonShooter = new JoystickButton(m_secondaryJoystick, IOConstants.kShooterButton);
 
   public RobotContainer() {
     m_shooter.setDefaultCommand(m_shooterIdle);

@@ -9,6 +9,6 @@ public class IOConstants {
     public static final int kDriverJoystickID = 0;
     public static final int kSecondaryJoystickID = 1;
 
-    public static final int kButtonNumShooter = 1;
+    public static final int kShooterButton = 1;
     public static final int kArcadeShooterJoystickAxis = 0;
 }
