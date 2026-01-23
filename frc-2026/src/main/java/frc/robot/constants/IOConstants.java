@@ -9,9 +9,7 @@ public class IOConstants {
     public static final int kDriverJoystickID = 0;
     public static final int kSecondaryJoystickID = 1;
 
-    public static final int kJoystickButton1ID = 1;
-    public static final int kJoystickButton2ID = 2;
-
-    public static final double kSmartDashBoardDefaultValue = 0;
+    public static final int karcadeIntakeButtonID = 1;
+    public static final int kintakePIDButtonID = 2;
     
 }

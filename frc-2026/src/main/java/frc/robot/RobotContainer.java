@@ -20,8 +20,8 @@ public class RobotContainer {
 
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
-  private JoystickButton m_joystickButton1 = new JoystickButton(m_driverJoystick, IOConstants.kJoystickButton1ID);
-  private JoystickButton m_joystickButton2 = new JoystickButton(m_driverJoystick, IOConstants.kJoystickButton2ID);
+  private JoystickButton m_arcadeIntakeButton = new JoystickButton(m_driverJoystick, IOConstants.karcadeIntakeButtonID);
+  private JoystickButton m_intakePIDButton = new JoystickButton(m_driverJoystick, IOConstants.kintakePIDButtonID);
   
   private Intake m_intake = new Intake(); 
 
@@ -37,8 +37,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    m_joystickButton1.whileTrue(m_arcadeIntake);
-    m_joystickButton2.whileTrue(m_intakePID);
+    m_arcadeIntakeButton.whileTrue(m_arcadeIntake);
+    m_intakePIDButton.whileTrue(m_intakePID);
   }
 
   public Command getAutonomousCommand() {
