@@ -11,6 +11,7 @@ public class IntakePivotConstants {
 
     public static final double kUpperLimitTicks = 1; // The maximum amount of ticks should not go over
     public static final double kStartingLimitTicks = 0; // Minimum ticks should start in this and stay not go below
+    public static final double kTicksPerRotation = 1;
 
     public static final double kArcadeSpeedMultiplier = 0.5; // The speed multplier for the arcade command
 
@@ -19,6 +20,11 @@ public class IntakePivotConstants {
     public static final double kD = 0;
     public static final double kPIDIZone = 0;
     public static final double kTargetTicks = 0;
+
+    public static final double kS = 0; // voltage to overcome static friction/inertia
+    public static final double kG = 0; // voltage needed to overcome gravity
+    public static final double kV = 0; // voltage needed to overcome friction while in motion
+    public static final double kA = 0; // voltage needed to induce acceleration
 
     public static final double kMaxVelocity = 1;
     public static final double kMaxAcceleration = 0.5;

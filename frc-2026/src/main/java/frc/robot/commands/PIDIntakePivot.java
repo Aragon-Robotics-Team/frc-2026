@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -20,13 +22,15 @@ public class PIDIntakePivot extends Command {
   
   private PIDController m_PIDController = new PIDController(IntakePivotConstants.kP, IntakePivotConstants.kI, IntakePivotConstants.kD); // built in PID maker thing
   private TrapezoidProfile m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(IntakePivotConstants.kMaxVelocity, IntakePivotConstants.kMaxAcceleration));
+  private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(IntakePivotConstants.kS, IntakePivotConstants.kV, IntakePivotConstants.kA); // kS, kV, kA
 
-  private TrapezoidProfile.State m_startPoint;
-  private TrapezoidProfile.State m_endPoint;
-  private TrapezoidProfile.State m_betweenPoint;
+  private TrapezoidProfile.State m_startState;
+  private TrapezoidProfile.State m_endState;
+  private TrapezoidProfile.State m_nextState;
 
   private double m_targetTicks; // desired goalpoint
-  private double m_speed; // the input speed variable
+  private double m_PIDspeed; // the input speed variable from PID
+  private double m_feedForwardSpeed; // from feed Forward
   private Timer m_timer = new Timer();
 
   private PIDIntakePivotSendable m_PIDIntakePivotSendable = new PIDIntakePivotSendable();
@@ -36,8 +40,8 @@ public class PIDIntakePivot extends Command {
     m_targetTicks = targetTicks; // passing in values
 
     m_timer.restart();
-    m_startPoint = new TrapezoidProfile.State(m_intakePivot.getEncoderTicks(), m_intakePivot.getSpeed());
-    m_endPoint = new TrapezoidProfile.State(m_targetTicks, 0);
+    m_startState = new TrapezoidProfile.State(m_intakePivot.getEncoderTicks(), m_intakePivot.getSpeed());
+    m_endState = new TrapezoidProfile.State(m_targetTicks, 0);
 
     m_PIDController.setIZone(IntakePivotConstants.kPIDIZone); // intergral application zones
     // Use addRequirements() here to declare subsystem dependencies.
@@ -51,9 +55,10 @@ public class PIDIntakePivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_betweenPoint = m_trapezoidProfile.calculate(m_timer.get() , m_startPoint, m_endPoint);
-    m_speed = m_PIDController.calculate(m_intakePivot.getEncoderTicks(), m_betweenPoint.position); // calculating the speed
-    m_intakePivot.setSpeed(m_speed); //setting the speed
+    m_nextState = m_trapezoidProfile.calculate(m_timer.get() , m_startState, m_endState);
+    m_PIDspeed = m_PIDController.calculate(m_intakePivot.getEncoderTicks(), m_nextState.position); // calculating the speed
+    m_feedForwardSpeed = m_feedForward.calculate(m_nextState.velocity);
+    m_intakePivot.setSpeed(m_PIDspeed + m_feedForwardSpeed); //setting the speed
   }
 
   // Called once the command ends or is interrupted.
