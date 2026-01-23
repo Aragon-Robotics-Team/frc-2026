@@ -42,7 +42,7 @@ public class ShooterTrapezoidalPID extends Command {
   public void initialize() {
     m_timer.restart();
     m_startState = new TrapezoidProfile.State(0, m_shooter.getLeftShooterRPM());
-    m_goalState = new TrapezoidProfile.State(Integer.MAX_VALUE, 0);
+    m_goalState = new TrapezoidProfile.State(Integer.MAX_VALUE, m_targetRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
