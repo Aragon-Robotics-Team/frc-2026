@@ -16,7 +16,7 @@ public class PIDIntakePivot extends Command {
   /** Creates a new PIDIntakePivot. */
   private IntakePivot m_intakePivot; // subsystem that is used
   private PIDController m_PIDController = new PIDController(IntakePivotConstants.kP, IntakePivotConstants.kI, IntakePivotConstants.kD); // built in PID maker thing
-
+  
   private double m_targetTicks; // desired goalpoint
   private double m_speed; // the input speed variable
 
@@ -63,7 +63,7 @@ public PIDIntakePivotSendable getPIDIntakePivotSendable() {
     public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType("PIDIntakePivot");
       builder.addDoubleProperty("Speed", () -> m_intakePivot.getSpeed(), null);
-      builder.addDoubleProperty("Target Ticks", () -> m_targetTicks, null);
+      builder.addDoubleProperty("Target Ticks", () -> m_targetTicks, (double ticks) -> m_targetTicks = ticks);
       builder.addDoubleProperty("Current Ticks", () -> m_intakePivot.getEncoderTicks(), null);
     }
   }
