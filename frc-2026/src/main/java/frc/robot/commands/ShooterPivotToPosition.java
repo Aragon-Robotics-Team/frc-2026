@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterPivot;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class BangBangShooterPivot extends Command {
-  /** Creates a new BangBangShooterPivot. */
+public class ShooterPivotToPosition extends Command {
+  /** Creates a new ShooterPivotToPosition. */
   private ShooterPivot m_shooterPivot;
   private double m_targetHeight;
 
-  private BangBangShooterPivotSendable m_bangBangShooterPivotSendable = new BangBangShooterPivotSendable();
+  private ShooterPivotToPositionSendable m_shooterPivotToPositionSendable = new ShooterPivotToPositionSendable();
 
-  public BangBangShooterPivot(ShooterPivot shooterPivot, double targetHeight) {
+  public ShooterPivotToPosition(ShooterPivot shooterPivot, double targetHeight) {
     m_shooterPivot = shooterPivot;
     m_targetHeight = targetHeight;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -45,15 +45,15 @@ public class BangBangShooterPivot extends Command {
   public boolean isFinished() {
     return false;
   }
-  public BangBangShooterPivotSendable getArmArcadeSendable() {
-    return m_bangBangShooterPivotSendable;
+  public ShooterPivotToPositionSendable getArmArcadeSendable() {
+    return m_shooterPivotToPositionSendable;
   }
 
-  private class BangBangShooterPivotSendable implements Sendable {
+  private class ShooterPivotToPositionSendable implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType("Bang Bang ShooterPivot");
+      builder.setSmartDashboardType("ShooterPivot to Position");
       builder.addDoubleProperty("Current Position", () -> m_shooterPivot.getPosition(), null);
       builder.addDoubleProperty("Target Position", () -> m_targetHeight, (double setHeight) -> m_targetHeight = setHeight);
     }

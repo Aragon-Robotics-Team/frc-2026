@@ -11,5 +11,5 @@ public class ShooterPivotConstants {
 
     public static final double kArcadeSpeedMultiplier = 0.2; // I have no idea if this is needed
 
-    public static final double kBangBangTargetHeight = 0.7;
+    public static final double kToPositionTargetHeight = 0.7;
 }
