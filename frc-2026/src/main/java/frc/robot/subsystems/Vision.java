@@ -14,6 +14,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
@@ -52,17 +53,29 @@ public class Vision extends SubsystemBase {
         double avgDist = 0;
 
         //precalculation - count tags found, calculate avg distance
-        for (<PhotonTrackedTarget tgt : targets) {
+        for (PhotonTrackedTarget tgt : targets) {
           var tagPose = m_photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
           if (tagPose.isEmpty()) 
             continue;
           numTags ++;
-          avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estiamtedPose.get().toPose2d().getTranslation());
+          avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
         }
 
         if (numTags == 0) {
           //No tags visible. Default to single-tag std devs
           curStdDevs = VisionConstants.kSingleTagStdDevs;
+        }
+        else {
+          //Tags visible, run full heuristic
+          avgDist /= numTags;
+          
+          if (numTags > 1)
+            estStdDevs = VisionConstants.kMultiTagStdDevs;
+          if (numTags == 1 && avgDist > 4)
+            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+          else {
+            estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+          }
         }
       }
 
