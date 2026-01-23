@@ -80,6 +80,7 @@ public class SwerveModule extends SubsystemBase {
     m_pid.enableContinuousInput(-Math.PI, Math.PI);
     m_prefix = location;
 
+    //drive values
     driveAngularVelocity = m_driveMotor.getVelocity();
     drivePosition = m_driveMotor.getPosition();
     driveAngularAcceleration = m_driveMotor.getAcceleration();
@@ -100,6 +101,7 @@ public class SwerveModule extends SubsystemBase {
     drivePidReference = m_driveMotor.getClosedLoopReference();
     drivePidReferenceSlope = m_driveMotor.getClosedLoopReferenceSlope();
 
+    //turn values
     turnRelativeEncoderPosition = m_turnMotor.getPosition();
     turnAngularVelocity = m_turnMotor.getVelocity();
     turnAcceleration = m_turnMotor.getAcceleration();
@@ -112,8 +114,6 @@ public class SwerveModule extends SubsystemBase {
 
     this.initDrivePID(m_driveMotor);
   }
-  
-  private int driveMotorMode = 0;
 
   private void initDrivePID(TalonFX driveCTalonFX) {
     Slot0Configs slot0Configs = new Slot0Configs();
@@ -128,7 +128,7 @@ public class SwerveModule extends SubsystemBase {
     double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
     state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
-    m_driveMotor.setControl(m_driveVelocityInput.withSlot(driveMotorMode).withVelocity(m_driveMotorRotationsPerSecond));
+    m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond));
     
     double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
@@ -138,15 +138,14 @@ public class SwerveModule extends SubsystemBase {
 
   private void logData(SwerveModuleState moduleState, double currentAngle, double error) {
     //log turn pid info
-    Logger.recordOutput(m_prefix+"turn/commandedAngleOfTheWheelInDegrees", moduleState.angle);
-    Logger.recordOutput(m_prefix+"turn/Pid/errorDerivative", m_pid.getErrorDerivative());
-    Logger.recordOutput(m_prefix+"turn/Pid/error", m_pid.getError());
-    Logger.recordOutput(m_prefix+"turn/Pid/accumulatedError", m_pid.getAccumulatedError());
-    Logger.recordOutput(m_prefix+"turn/Pid/errorTolerance", m_pid.getErrorTolerance());
-    Logger.recordOutput(m_prefix+"turn/Pid/errorDerivativeTolerance", m_pid.getErrorDerivativeTolerance());
-    Logger.recordOutput(m_prefix+"turn/Pid/iZone", m_pid.getIZone());
-    Logger.recordOutput(m_prefix+"turn/Pid/calculatedPidValue", error);
-    Logger.recordOutput(m_prefix+"turn/Pid/kP", m_pid.getP());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivative", m_pid.getErrorDerivative());
+    Logger.recordOutput(m_prefix+"/turn/Pid/error", m_pid.getError());
+    Logger.recordOutput(m_prefix+"/turn/Pid/accumulatedError", m_pid.getAccumulatedError());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorTolerance", m_pid.getErrorTolerance());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivativeTolerance", m_pid.getErrorDerivativeTolerance());
+    Logger.recordOutput(m_prefix+"/turn/Pid/iZone", m_pid.getIZone());
+    Logger.recordOutput(m_prefix+"/turn/Pid/calculatedPidValue", error);
+    Logger.recordOutput(m_prefix+"/turn/Pid/kP", m_pid.getP());
 
     //log absolute encoder info
     Logger.recordOutput(m_prefix+"/absoluteEncoder/dutyCyclePosition", currentAngle / 2 * Math.PI); //0 to 1
@@ -155,6 +154,41 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", currentAngle);
     Logger.recordOutput(m_prefix+"/absoluteEncoder/encoderGet", m_absoluteEncoder.get());
     Logger.recordOutput(m_prefix+"/absoluteEncoder/offset", m_absoluteEncoderOffset);
+
+    //log turn info
+    Logger.recordOutput(m_prefix+"/turn/commandedAngleOfTheWheelInDegrees", moduleState.angle);
+    Logger.recordOutput(m_prefix+"/turn/relativeEncoderPosition", turnRelativeEncoderPosition.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/angularVelocity", turnAngularVelocity.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/acceleration", turnAcceleration.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/bridgeOutput", turnBridgeOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/dutyCycle", turnDutyCycle.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/voltage", turnVoltage.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/supplyCurrent", turnSupplyCurrent.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/supplyVoltage", turnSupplyCurrent.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/turn/torqueCurrent", turnTorqueCurrent.getValueAsDouble());
+    
+    //log drive info
+    Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/position", drivePosition.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/angularAcceleration", driveAngularAcceleration.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/bridgeOutput", driveBridgeOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/controlSystemTotalOutput", driveControlSystemTotalOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/controlSystemProportionalOutput", driveControlSystemProportionalOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/controlSystemReference", driveControlSystemReference.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/dutyCycle", driveDutyCycle.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/voltage", driveVoltage.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/supplyCurrent", driveSupplyCurrent.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/supplyVoltage", driveSupplyVoltage.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/torqueCurrent", driveTorqueCurrent.getValueAsDouble());
+
+    //drive pid info
+    Logger.recordOutput(m_prefix+"/drive/Pid/derivativeOutput", drivePidDerivativeOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/integralOutput", drivePidIntegralOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/pidError", drivePidError.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/pidOutput", drivePidOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/proportionalOutput", drivePidProportionalOutput.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/reference", drivePidReference.getValueAsDouble());
+    Logger.recordOutput(m_prefix+"/drive/Pid/referenceSlope", drivePidReferenceSlope.getValueAsDouble());
   }
 
   @Override
