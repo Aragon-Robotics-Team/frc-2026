@@ -22,4 +22,7 @@ public class VisionConstants {
     public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(
         AprilTagFields.k2025ReefscapeWelded
         );
+        
+    //To Do: check this value (suspiciously copied from photonvision)
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4,4,8);
 }
