@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -28,7 +29,7 @@ public class IntakePivot extends SubsystemBase {
 
   private Mechanism2d m_mech = new Mechanism2d(5 , 5);
   private MechanismRoot2d m_pivot = m_mech.getRoot("Pivot", 1, 1);
-  private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, 90));
+  private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, 0));
   private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180));
   
   private DCMotor m_gearbox = DCMotor.getKrakenX44(1);
@@ -70,6 +71,13 @@ public class IntakePivot extends SubsystemBase {
     m_pivotSim.update(IntakePivotConstants.kLoopTime);
     m_encoderSim.set(m_pivotSim.getAngleRads());
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_pivotSim.getAngleRads()));
-    m_intake.setAngle(m_pivotSim.getAngleRads());
+    m_intake.setAngle(Units.radiansToDegrees(m_pivotSim.getAngleRads()));
+    System.out.print("Motor");
+    System.out.println(m_motor.get() * RobotController.getBatteryVoltage());
+    System.out.print("MechAngle ");
+    System.out.println(m_intake.getAngle());
+    System.out.print("SimAngle  ");
+    System.out.println(m_pivotSim.getAngleRads());
+    System.out.println();
   }
 }

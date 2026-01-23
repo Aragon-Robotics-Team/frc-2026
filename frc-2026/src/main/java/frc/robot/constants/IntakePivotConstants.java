@@ -32,8 +32,8 @@ public class IntakePivotConstants {
     public static final double kIntakeLength = 1.0; // In meters
     public static final double kMinAngle = 0.0; // In radians
     public static final double kIntakeMass = 10.0; // In kilograms
-    public static final double kMaxAngle = Math.PI / 4.0;
-    public static final double kPivotReduction = 0.0;
+    public static final double kMaxAngle = Math.PI / 2.0;
+    public static final double kPivotReduction = 1.0;
     public static final boolean kSimGravity = true;
     public static final double kSimStartAngle = 0.0;
     public static final double kEncoderNoise = 0.0;
