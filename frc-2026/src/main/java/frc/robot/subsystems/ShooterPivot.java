@@ -5,13 +5,25 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterPivotConstants;
 
 public class ShooterPivot extends SubsystemBase {
   /** Creates a new ShooterPivot. */
+
   private Servo m_actuator = new Servo(ShooterPivotConstants.kServoChannel);
-  public ShooterPivot() {}
+
+  private Mechanism2d m_mech = new Mechanism2d(5, 5);
+  private MechanismRoot2d m_base = m_mech.getRoot("base", 3, 1);
+  private MechanismLigament2d m_elevator = m_base.append(new MechanismLigament2d("elevator", ShooterPivotConstants.kElevatorMinimumLength, 90));
+
+  public ShooterPivot() {
+    SmartDashboard.putData("Shooter Pivot Sim", m_mech);
+  }
 
   public double getPosition() {
     return m_actuator.get();
@@ -32,5 +44,6 @@ public class ShooterPivot extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    m_elevator.setLength(ShooterPivotConstants.kElevatorMinimumLength + ShooterPivotConstants.kServoToActuatorLength*getPosition());
   }
 }
