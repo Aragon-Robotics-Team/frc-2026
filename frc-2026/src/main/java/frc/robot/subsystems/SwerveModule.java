@@ -32,7 +32,7 @@ public class SwerveModule extends SubsystemBase {
   private TalonFX m_turnMotor;
   private TalonFX m_driveMotor;
   private DutyCycleEncoder m_absoluteEncoder;
-  private PIDController m_pid = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
+  private PIDController m_pidTurn = new PIDController(DriveConstants.kPTurn, DriveConstants.kITurn, DriveConstants.kDTurn);
   private double m_absoluteEncoderOffset;
   private int m_driveReversed;
   private final VelocityVoltage m_driveVelocityInput = new VelocityVoltage(0);
@@ -76,7 +76,7 @@ public class SwerveModule extends SubsystemBase {
     m_absoluteEncoder = new DutyCycleEncoder(absoluteEncoderID, 2 * Math.PI, 0);
     m_absoluteEncoderOffset = absoluteEncoderOffset;
     m_driveReversed = driveReversed;
-    m_pid.enableContinuousInput(-Math.PI, Math.PI);
+    m_pidTurn.enableContinuousInput(-Math.PI, Math.PI);
     m_prefix = location;
 
     //drive values
@@ -129,7 +129,7 @@ public class SwerveModule extends SubsystemBase {
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond));
     
-    double m_error = m_pid.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
+    double m_error = m_pidTurn.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
 
     logData(state, m_currentAngle, m_error, m_driveMotorRotationsPerSecond);
@@ -166,14 +166,14 @@ public class SwerveModule extends SubsystemBase {
       turnTorqueCurrent);
 
     //log turn pid info
-    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivative", m_pid.getErrorDerivative());
-    Logger.recordOutput(m_prefix+"/turn/Pid/error", m_pid.getError());
-    Logger.recordOutput(m_prefix+"/turn/Pid/accumulatedError", m_pid.getAccumulatedError());
-    Logger.recordOutput(m_prefix+"/turn/Pid/errorTolerance", m_pid.getErrorTolerance());
-    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivativeTolerance", m_pid.getErrorDerivativeTolerance());
-    Logger.recordOutput(m_prefix+"/turn/Pid/iZone", m_pid.getIZone());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivative", m_pidTurn.getErrorDerivative());
+    Logger.recordOutput(m_prefix+"/turn/Pid/error", m_pidTurn.getError());
+    Logger.recordOutput(m_prefix+"/turn/Pid/accumulatedError", m_pidTurn.getAccumulatedError());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorTolerance", m_pidTurn.getErrorTolerance());
+    Logger.recordOutput(m_prefix+"/turn/Pid/errorDerivativeTolerance", m_pidTurn.getErrorDerivativeTolerance());
+    Logger.recordOutput(m_prefix+"/turn/Pid/iZone", m_pidTurn.getIZone());
     Logger.recordOutput(m_prefix+"/turn/Pid/calculatedPidValue", error);
-    Logger.recordOutput(m_prefix+"/turn/Pid/kP", m_pid.getP());
+    Logger.recordOutput(m_prefix+"/turn/Pid/kP", m_pidTurn.getP());
 
     //log absolute encoder info
     Logger.recordOutput(m_prefix+"/absoluteEncoder/dutyCyclePosition", currentAngle / 2 * Math.PI); //0 to 1

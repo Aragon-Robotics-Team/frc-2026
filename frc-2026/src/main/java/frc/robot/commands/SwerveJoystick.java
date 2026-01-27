@@ -33,15 +33,9 @@ public class SwerveJoystick extends Command {
   @Override
   public void execute() {
     double vx = -m_joystick.getLeftY() * DriveConstants.kMaxMotorSpeed * DriveConstants.kSpeedLimiter;
-    /*ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(
-      -m_joystick.getLeftY() * DriveConstants.kMaxMotorSpeed * DriveConstants.kSpeedLimiter,
-     -m_joystick.getLeftX() * DriveConstants.kMaxMotorSpeed * DriveConstants.kSpeedLimiter, 
-     -m_joystick.getRightX() * DriveConstants.kMaxMotorSpeed);*/
-     ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(
-      vx,
-     0, 
-     -m_joystick.getRightX() * DriveConstants.kMaxMotorSpeed);
-    //ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(0.2, 0, 0);
+    double vy = -m_joystick.getLeftX() * DriveConstants.kMaxMotorSpeed * DriveConstants.kSpeedLimiter;
+    double omega = -m_joystick.getRightX() * DriveConstants.kMaxMotorSpeed;
+    ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(vx, vy, omega);
     //m_swerveDrive.driveRobot(ChassisSpeeds.fromFieldRelativeSpeeds(m_chassisSpeed, m_swerveDrive.getMeasuredAngle()));
     m_swerveDrive.driveRobot(m_chassisSpeed);
     Logger.recordOutput("chassis speed", m_chassisSpeed);

@@ -26,7 +26,7 @@ public class DriveConstants {
     public static final int kBackRightAbsoluteEncoderPort = 3;
 
     public static final double kFrontLeftEncoderOffset = 5.26 + Math.PI;
-    public static final double kFrontRightEncoderOffset = 0.23;
+    public static final double kFrontRightEncoderOffset = 0.39 + Math.PI;
     public static final double kBackLeftEncoderOffset = 2.35 + Math.PI;
     public static final double kBackRightEncoderOffset = 2.82;
 
@@ -35,9 +35,9 @@ public class DriveConstants {
     public static final int kBackLeftDriveReversed = -1;
     public static final int kBackRightDriveReversed = 1;
 
-    public static final double kP = 0.1;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kPTurn = 0.25;  
+    public static final double kITurn = 0;
+    public static final double kDTurn = 0;
 
     public static final double kWheelDiameter = Units.inchesToMeters(4);
     public static final int kGyroID = 0;
@@ -51,8 +51,8 @@ public class DriveConstants {
     public static final double kSpeedLimiter = 0.2;
 
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
-    new Translation2d(0.346, 0.343),
-    new Translation2d(0.346, -0.343),
-    new Translation2d(-0.346, 0.343),
-    new Translation2d(-0.346, -0.343));
+    new Translation2d(0.270, 0.267),
+    new Translation2d(0.270, -0.267),
+    new Translation2d(-0.270, 0.267),
+    new Translation2d(-0.270, -0.267));
 }
