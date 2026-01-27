@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -25,17 +28,20 @@ import frc.robot.constants.IntakePivotConstants;
 public class IntakePivot extends SubsystemBase {
   /** Creates a new IntakePivot. */
   private TalonFX m_motor = new TalonFX(IntakePivotConstants.kMotorID); // creating the objects on the subsystem
-  private DutyCycleEncoder m_encoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderChannel);
 
-  private Mechanism2d m_mech = new Mechanism2d(5 , 5);
-  private MechanismRoot2d m_pivot = m_mech.getRoot("Pivot", 1, 1);
-  private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, 0));
-  private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180));
+  private CurrentLimitsConfigs m_currentLimitsConfigs = new CurrentLimitsConfigs();
+  private TalonFXConfigurator m_config = m_motor.getConfigurator();
+  
+  private DutyCycleEncoder m_encoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderChannel);
   
   private DCMotor m_gearbox = DCMotor.getKrakenX44(1);
   private SingleJointedArmSim m_pivotSim = new SingleJointedArmSim(m_gearbox, IntakePivotConstants.kPivotReduction, SingleJointedArmSim.estimateMOI(IntakePivotConstants.kIntakeLength, IntakePivotConstants.kIntakeMass), IntakePivotConstants.kIntakeLength, IntakePivotConstants.kMinAngle, IntakePivotConstants.kMaxAngle, IntakePivotConstants.kSimGravity, IntakePivotConstants.kSimStartAngle, IntakePivotConstants.kTicksPerPulse, IntakePivotConstants.kEncoderNoise);
   private DutyCycleEncoderSim m_encoderSim = new DutyCycleEncoderSim(m_encoder);
 
+  private Mechanism2d m_mech = new Mechanism2d(5 , 5);
+  private MechanismRoot2d m_pivot = m_mech.getRoot("Pivot", 1, 1);
+  private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
+  private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180));
 
 
   public IntakePivot() {
@@ -50,6 +56,7 @@ public class IntakePivot extends SubsystemBase {
     }
     else{
       m_motor.set(0);
+      System.out.println("Out of bounds");
     }
   } // setting the speed method
 
@@ -67,17 +74,19 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public void simulationPeriodic() {
+    // m_pivotSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
     m_pivotSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
     m_pivotSim.update(IntakePivotConstants.kLoopTime);
     m_encoderSim.set(m_pivotSim.getAngleRads());
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_pivotSim.getAngleRads()));
     m_intake.setAngle(Units.radiansToDegrees(m_pivotSim.getAngleRads()));
-    System.out.print("Motor");
-    System.out.println(m_motor.get() * RobotController.getBatteryVoltage());
-    System.out.print("MechAngle ");
-    System.out.println(m_intake.getAngle());
-    System.out.print("SimAngle  ");
-    System.out.println(m_pivotSim.getAngleRads());
-    System.out.println();
+
+    // System.out.print("Motor");
+    // System.out.println(m_motor.get() * RobotController.getBatteryVoltage());
+    // System.out.print("MechAngle ");
+    // System.out.println(m_intake.getAngle());
+    // System.out.print("SimAngle  ");
+    // System.out.println(m_pivotSim.getAngleRads());
+    // System.out.println();
   }
 }

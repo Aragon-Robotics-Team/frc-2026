@@ -29,7 +29,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     
-    m_intakePivot.setDefaultCommand(m_arcadeIntakePivot);
+    m_intakePivot.setDefaultCommand(m_PIDIntakePivot);
 
     SendableRegistry.add(m_arcadeIntakePivot.getIntakePivotArcadeSendable(), "IntakePivotArcade");
     Shuffleboard.getTab("SmartDashboard").add(m_arcadeIntakePivot.getIntakePivotArcadeSendable()).withWidget("IntakePivotArcade");

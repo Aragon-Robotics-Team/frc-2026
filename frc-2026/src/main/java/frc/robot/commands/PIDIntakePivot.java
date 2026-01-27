@@ -57,7 +57,9 @@ public class PIDIntakePivot extends Command {
     m_nextState = m_trapezoidProfile.calculate(m_timer.get() , m_startState, m_endState);
     m_PIDspeed = m_PIDController.calculate(m_intakePivot.getEncoderTicks(), m_nextState.position); // calculating the speed
     m_feedForwardSpeed = m_feedForward.calculate(m_nextState.velocity);
+    // m_intakePivot.setSpeed(1.0);
     m_intakePivot.setSpeed(m_PIDspeed + m_feedForwardSpeed); //setting the speed
+    // m_intakePivot.setSpeed(0.3);
   }
 
   // Called once the command ends or is interrupted.
@@ -81,6 +83,7 @@ public PIDIntakePivotSendable getPIDIntakePivotSendable() {
     public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType("PIDIntakePivot");
       builder.addDoubleProperty("Speed", () -> m_intakePivot.getSpeed(), null);
+      builder.addDoubleProperty("Set Speed", () -> m_feedForwardSpeed, null);
       builder.addDoubleProperty("Target Ticks", () -> m_targetTicks, (double ticks) -> m_targetTicks = ticks);
       builder.addDoubleProperty("Current Ticks", () -> m_intakePivot.getEncoderTicks(), null);
     }
