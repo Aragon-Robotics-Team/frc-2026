@@ -10,15 +10,15 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-    public static final int kFrontLeftTurnID = 13;
-    public static final int kFrontRightTurnID = 12;
-    public static final int kBackLeftTurnID = 11;
-    public static final int kBackRightTurnID = 14;
+    public static final int kFrontLeftTurnID = 14;
+    public static final int kFrontRightTurnID = 11;
+    public static final int kBackLeftTurnID = 12;
+    public static final int kBackRightTurnID = 13;
 
-    public static final int kFrontLeftDriveID = 3;
-    public static final int kFrontRightDriveID = 2;
-    public static final int kBackLeftDriveID = 1;
-    public static final int kBackRightDriveID = 5;
+    public static final int kFrontLeftDriveID = 5;
+    public static final int kFrontRightDriveID = 1;
+    public static final int kBackLeftDriveID = 2;
+    public static final int kBackRightDriveID = 3;
 
     public static final int kFrontLeftAbsoluteEncoderPort = 0;
     public static final int kFrontRightAbsoluteEncoderPort = 1;
@@ -51,8 +51,8 @@ public class DriveConstants {
     public static final double kSpeedLimiter = 0.2;
 
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
-    new Translation2d(0.295, 0.292),
-    new Translation2d(0.295, -0.292),
-    new Translation2d(-0.295, 0.292),
-    new Translation2d(-0.295, -0.292));
+    new Translation2d(0.346, 0.343),
+    new Translation2d(0.346, -0.343),
+    new Translation2d(-0.346, 0.343),
+    new Translation2d(-0.346, -0.343));
 }
