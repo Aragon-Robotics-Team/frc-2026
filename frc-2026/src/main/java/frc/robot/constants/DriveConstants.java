@@ -10,15 +10,15 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-    public static final int kFrontLeftTurnID = 11;
-    public static final int kFrontRightTurnID = 14;
-    public static final int kBackLeftTurnID = 12;
-    public static final int kBackRightTurnID = 13;
+    public static final int kFrontLeftTurnID = 13;
+    public static final int kFrontRightTurnID = 12;
+    public static final int kBackLeftTurnID = 11;
+    public static final int kBackRightTurnID = 14;
 
-    public static final int kFrontLeftDriveID = 1;
-    public static final int kFrontRightDriveID = 5;
-    public static final int kBackLeftDriveID = 2;
-    public static final int kBackRightDriveID = 3;
+    public static final int kFrontLeftDriveID = 3;
+    public static final int kFrontRightDriveID = 2;
+    public static final int kBackLeftDriveID = 1;
+    public static final int kBackRightDriveID = 5;
 
     public static final int kFrontLeftAbsoluteEncoderPort = 0;
     public static final int kFrontRightAbsoluteEncoderPort = 1;
