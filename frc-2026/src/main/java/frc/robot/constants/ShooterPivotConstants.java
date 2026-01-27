@@ -14,5 +14,5 @@ public class ShooterPivotConstants {
     public static final double kToPositionTargetHeight = 0.7;
 
     public static final double kElevatorMinimumLength = 1;
-    public static final double kServoToActuatorLength = 1;
+    public static final double kServoToActuatorLength = 2;
 }

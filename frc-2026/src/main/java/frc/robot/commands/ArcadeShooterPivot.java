@@ -41,6 +41,8 @@ public class ArcadeShooterPivot extends Command {
       m_position += ShooterPivotConstants.kArcadePositionMultiplier * m_joystick.getRawAxis(IOConstants.kShooterPivotAxis);
       m_shooterPivot.setPosition(m_position);
     }
+    m_position = m_shooterPivot.getPosition();
+    //System.out.println(m_position);
   }
 
   // Called once the command ends or is interrupted.

@@ -44,6 +44,6 @@ public class ShooterPivot extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_elevator.setLength(ShooterPivotConstants.kElevatorMinimumLength + ShooterPivotConstants.kServoToActuatorLength*getPosition());
+    m_elevator.setLength(ShooterPivotConstants.kElevatorMinimumLength + ShooterPivotConstants.kServoToActuatorLength * getPosition());
   }
 }
