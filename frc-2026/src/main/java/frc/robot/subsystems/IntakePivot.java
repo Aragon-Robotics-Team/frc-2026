@@ -28,10 +28,6 @@ import frc.robot.constants.IntakePivotConstants;
 public class IntakePivot extends SubsystemBase {
   /** Creates a new IntakePivot. */
   private TalonFX m_motor = new TalonFX(IntakePivotConstants.kMotorID); // creating the objects on the subsystem
-
-  private CurrentLimitsConfigs m_currentLimitsConfigs = new CurrentLimitsConfigs();
-  private TalonFXConfigurator m_config = m_motor.getConfigurator();
-  
   private DutyCycleEncoder m_encoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderChannel);
   
   private DCMotor m_gearbox = DCMotor.getKrakenX44(1);
