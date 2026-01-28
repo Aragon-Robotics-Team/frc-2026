@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterPivotConstants;
 
@@ -17,12 +19,21 @@ public class ShooterPivot extends SubsystemBase {
 
   private Servo m_actuator = new Servo(ShooterPivotConstants.kServoChannel);
 
-  private Mechanism2d m_mech = new Mechanism2d(5, 5);
-  private MechanismRoot2d m_base = m_mech.getRoot("base", 3, 1);
+  private Mechanism2d m_mech = new Mechanism2d(7, 8);
+  private MechanismRoot2d m_base = m_mech.getRoot("base", 4, 1);
+  private MechanismRoot2d m_pivot = m_mech.getRoot("pivot", 4, 6);
+  private MechanismRoot2d m_drive = m_mech.getRoot("drive", 1, 1);
   private MechanismLigament2d m_elevator = m_base.append(new MechanismLigament2d("elevator", ShooterPivotConstants.kElevatorMinimumLength, 90));
+  private MechanismLigament2d m_driveTrain = m_drive.append(new MechanismLigament2d("drivetrain", 5, 0, 7, new Color8Bit(Color.kAntiqueWhite)));
 
   public ShooterPivot() {
     SmartDashboard.putData("Shooter Pivot Sim", m_mech);
+    for (int i = 220; i <= 300; i += 5) {
+      m_pivot.append(new MechanismLigament2d("a" + i, 3, i, 5, new Color8Bit(Color.kAquamarine)));
+    }
+    for (int i = 220; i<= 300; i += 5) {
+      m_pivot.append(new MechanismLigament2d("z"+ i, 2, i, 5, new Color8Bit(10,20,30)));
+    }
   }
 
   public double getPosition() {
@@ -45,5 +56,6 @@ public class ShooterPivot extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_elevator.setLength(ShooterPivotConstants.kElevatorMinimumLength + ShooterPivotConstants.kServoToActuatorLength * getPosition());
+    m_elevator.setAngle(180 - (90 - (Math.acos((m_elevator.getLength() * m_elevator.getLength() + 16) / (10 * m_elevator.getLength())) * 180 / Math.PI)));
   }
 }
