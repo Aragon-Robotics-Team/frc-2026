@@ -127,7 +127,7 @@ public class SwerveModule extends SubsystemBase {
     double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
     state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
-    m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond));
+    m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond * m_driveReversed));
     
     double m_error = m_pidTurn.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
@@ -180,7 +180,7 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderDutyCycleOffset", m_absoluteEncoderOffset);
     Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInDegrees", currentAngle / Math.PI * 180);
     Logger.recordOutput(m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", currentAngle);
-    Logger.recordOutput(m_prefix+"/absoluteEncoder/encoderGet", m_absoluteEncoder.get());
+    Logger.recordOutput(m_prefix+"/absoluteEncoder/encoderGet"+" "+m_prefix, m_absoluteEncoder.get());
     Logger.recordOutput(m_prefix+"/absoluteEncoder/offset", m_absoluteEncoderOffset);
 
     //log turn info
