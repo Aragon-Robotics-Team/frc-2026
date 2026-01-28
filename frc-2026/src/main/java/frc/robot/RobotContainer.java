@@ -35,7 +35,6 @@ public class RobotContainer {
   private ArcadeShooterPivot m_arcadeShooterPivot = new ArcadeShooterPivot(m_shooterPivot, m_secondaryJoystick);
   private ShooterPivotToPosition m_shooterPivotToPosition = new ShooterPivotToPosition(m_shooterPivot, ShooterPivotConstants.kToPositionTargetHeight);
 
-
   public RobotContainer() {
     
     m_intakePivot.setDefaultCommand(m_PIDIntakePivot);
