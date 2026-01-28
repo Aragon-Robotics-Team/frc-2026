@@ -41,7 +41,7 @@ public class IntakePivot extends SubsystemBase {
   private Mechanism2d m_mech = new Mechanism2d(5 , 5);
   private MechanismRoot2d m_pivot = m_mech.getRoot("Pivot", 1, 1);
   private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
-  private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180));
+  private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180)); // Static
 
 
   public IntakePivot() {
@@ -65,7 +65,9 @@ public class IntakePivot extends SubsystemBase {
   } // getting the speed method
 
   public double getEncoderTicks() {
-    return m_encoder.get();  
+    return m_encoder.get(); // use for sim
+    // return m_encoder.get() * 2.0 * Math.PI
+    // use for actual intake pivot
   } // getting the ticks
 
   @Override
@@ -74,13 +76,15 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public void simulationPeriodic() {
-    // m_pivotSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
     m_pivotSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
+    // m_pivotSim.setInput(0.58);
     m_pivotSim.update(IntakePivotConstants.kLoopTime);
     m_encoderSim.set(m_pivotSim.getAngleRads());
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_pivotSim.getAngleRads()));
     m_intake.setAngle(Units.radiansToDegrees(m_pivotSim.getAngleRads()));
 
+    
+    // System.out.println(m_pivotSim.getVelocityRadPerSec());
     // System.out.print("Motor");
     // System.out.println(m_motor.get() * RobotController.getBatteryVoltage());
     // System.out.print("MechAngle ");
