@@ -37,7 +37,7 @@ public class ShooterPivotToPosition extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterPivot.setPosition(0);
+    m_shooterPivot.setPosition(m_shooterPivot.getPosition());
   }
 
   // Returns true when the command should end.
