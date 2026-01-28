@@ -12,7 +12,7 @@ import frc.robot.constants.ClimbConstants;
 
 public class Climb extends SubsystemBase {
 
-  private TalonFX m_motor = new TalonFX(ClimbConstants.kClimbID);
+  private TalonFX m_motor = new TalonFX(ClimbConstants.kClimbMotorID);
   
   /** Creates a new Climb. */
   public Climb() {
@@ -32,7 +32,17 @@ public class Climb extends SubsystemBase {
     return m_motor.get();
   }
 
-  public double getPosition() {
-    return m_motor.getPosition().getValueAsDouble();
+  public double getTickPosition() {
+    return m_motor.getPosition().getValueAsDouble()*ClimbConstants.kTicksPerRotation;
   }
+
+  public double getRadianPosition() {
+    return ticksToRadiansPosition();
+  }
+
+  public double ticksToRadiansPosition() {
+    return (getTickPosition()/ClimbConstants.kTicksPerRotation) * ClimbConstants.kRadiansPerRotation;
+  }
+
+  
 }
