@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -18,6 +21,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -127,6 +132,7 @@ public class SwerveModule extends SubsystemBase {
     double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
     state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
+
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond * m_driveReversed));
     
     double m_error = m_pidTurn.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
@@ -196,7 +202,12 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput(m_prefix+"/turn/torqueCurrent", turnTorqueCurrent.getValueAsDouble());
     
     //log drive info
-    Logger.recordOutput(m_prefix+"/drive/angularVelocityMetersPerSecond", driveAngularVelocity.getValueAsDouble() * (2 * Math.PI) * (DriveConstants.kWheelDiameter * Math.PI) / DriveConstants.kGearRatio);
+    double angularVelocityRotationsPerSecond = driveAngularVelocity.getValue().in(RotationsPerSecond);
+    double angularVelocityRadiansPerSecond = Units.rotationsToRadians(driveAngularVelocity.getValueAsDouble());
+    double foo = Units.radiansPerSecondToRotationsPerMinute(angularVelocityRadiansPerSecond)*60;
+    Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
+    System.out.println(driveAngularVelocity.getValue().baseUnit().name());
+    Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/commandedMotorRotationsPerSecond", motorRotationsPerSecond);
     Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/position", drivePosition.getValueAsDouble());
