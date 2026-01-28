@@ -64,7 +64,6 @@ public class PIDIntakePivot extends Command {
     m_intakePivot.setSpeed(m_feedForwardSpeed + m_PIDspeed);
     // m_intakePivot.setSpeed(m_PIDspeed + m_feedForwardSpeed); //setting the speed
     // m_intakePivot.setSpeed(0.3);
-    System.out.println(m_targetTicks);
   }
 
   // Called once the command ends or is interrupted.
