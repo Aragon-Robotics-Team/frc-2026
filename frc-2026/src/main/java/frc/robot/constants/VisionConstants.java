@@ -21,17 +21,17 @@ public class VisionConstants {
     public static final String kRightCamName = "Arducam_OV9281_USB_Camera (1)";
     
     public static final Transform3d kLeftRobotToCam = new Transform3d(
-        new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), 
-        new Rotation3d(0, Math.toRadians(10), 0)
+        new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(5), Units.inchesToMeters(37.5)), 
+        new Rotation3d(Math.toRadians(0.25), Math.toRadians(-12.05), 0)
     );
 
     public static final Transform3d kRightRobotToCam = new Transform3d(
-        new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), 
-        new Rotation3d(0, Math.toRadians(10), 0)
+        new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(-5), Units.inchesToMeters(36)), 
+        new Rotation3d(Math.toRadians(0.25), Math.toRadians(-16.55), 0)
     );
 
     public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(
-        AprilTagFields.k2025ReefscapeWelded
+        AprilTagFields.k2026RebuiltAndymark
     );
         
     //To Do: check these values (suspiciously copied from photonvision)

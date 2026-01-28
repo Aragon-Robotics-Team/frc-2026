@@ -12,12 +12,17 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
 
@@ -49,7 +54,8 @@ public class Vision extends SubsystemBase {
 
       //precalculation - count tags found, calculate avg distance
       for (PhotonTrackedTarget tgt : targets) {
-        Optional<Pose3d> tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        System.out.println("Target " + tgt.fiducialId + " ambiguity: " + tgt.getPoseAmbiguity());
+        Optional<Pose3d> tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());    
         if (tagPose.isEmpty()) 
           continue;
         numTags ++;
@@ -85,6 +91,9 @@ public class Vision extends SubsystemBase {
       }
 
       if (estimate.isPresent()) {
+        SmartDashboard.putNumber("Pose Estimate X" + cam.getName(), Units.metersToInches(estimate.get().estimatedPose.toPose2d().getX()));
+        SmartDashboard.putNumber("Pose Estimate Y" + cam.getName(), Units.metersToInches(estimate.get().estimatedPose.toPose2d().getY()));
+        SmartDashboard.putNumber("Pose Estimate Theta" + cam.getName(), Units.metersToInches(estimate.get().estimatedPose.toPose2d().getRotation().getDegrees()));
         m_estimateConsumer.accept(estimate.get().estimatedPose.toPose2d(), estimate.get().timestampSeconds, updateStandardDevs(estimate, result.getTargets(), estimator, singleTagStdDevs, multiTagStdDevs));
       }      
     }  
@@ -95,7 +104,6 @@ public class Vision extends SubsystemBase {
     // This method will be called once per scheduler run
     estimatePoseFromResults(m_leftCam, m_leftVisionEstimate, m_leftPhotonEstimator, VisionConstants.kLeftSingleTagStdDevs, VisionConstants.kLeftMultiTagStdDevs);
     estimatePoseFromResults(m_rightCam, m_rightVisionEstimate, m_rightPhotonPoseEstimator, VisionConstants.kRightSingleTagStdDevs, VisionConstants.kRightMultiTagStdDevs);
-
   }
 
   @FunctionalInterface
