@@ -78,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
   public SwerveModule(int turnMotorID, int driveMotorID, int absoluteEncoderID, double absoluteEncoderOffset, int driveReversed, String location) {
     m_turnMotor = new TalonFX(turnMotorID);
     m_driveMotor = new TalonFX(driveMotorID);
-    m_absoluteEncoder = new DutyCycleEncoder(absoluteEncoderID, 2 * Math.PI, 0);
+    m_absoluteEncoder = new DutyCycleEncoder(absoluteEncoderID, 2 * Math.PI, absoluteEncoderOffset);
     m_absoluteEncoderOffset = absoluteEncoderOffset;
     m_driveReversed = driveReversed;
     m_pidTurn.enableContinuousInput(-Math.PI, Math.PI);
@@ -129,7 +129,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setModuleState(SwerveModuleState state) {
-    double m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset; // radians
+    double m_currentAngle = m_absoluteEncoder.get(); //radians
     state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
 
@@ -206,7 +206,7 @@ public class SwerveModule extends SubsystemBase {
     double angularVelocityRadiansPerSecond = Units.rotationsToRadians(driveAngularVelocity.getValueAsDouble());
     double foo = Units.radiansPerSecondToRotationsPerMinute(angularVelocityRadiansPerSecond)*60;
     Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
-    System.out.println(driveAngularVelocity.getValue().baseUnit().name());
+    //System.out.println(driveAngularVelocity.getValue().baseUnit().name());
     Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
     Logger.recordOutput(m_prefix+"/drive/commandedMotorRotationsPerSecond", motorRotationsPerSecond);
     Logger.recordOutput(m_prefix+"/drive/angularVelocity", driveAngularVelocity.getValueAsDouble());
