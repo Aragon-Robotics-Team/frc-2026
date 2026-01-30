@@ -19,10 +19,10 @@ import frc.robot.subsystems.Shooter;
 public class ShooterTrapezoidalPID extends Command {
   private Shooter m_shooter;
 
-  private TrapezoidProfile m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(ShooterConstants.kTargetRPM, ShooterConstants.kMaxAccel));
   private Timer m_timer = new Timer();
   private PIDController m_pidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
   private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
+  private TrapezoidProfile m_trapezoidProfile; 
 
   private double m_feedForwardOutput;
   private double m_accelerationRPM;
@@ -37,6 +37,7 @@ public class ShooterTrapezoidalPID extends Command {
   public ShooterTrapezoidalPID(Shooter shooter, double targetRPM) {
     m_shooter = shooter;
     m_targetRPM = targetRPM;
+    m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(m_targetRPM, ShooterConstants.kMaxAccel));
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_shooter);
   }
@@ -45,7 +46,7 @@ public class ShooterTrapezoidalPID extends Command {
   @Override
   public void initialize() {
     m_timer.restart();
-    m_startState = new TrapezoidProfile.State(0, m_shooter.getLeftShooterRPM());
+    m_startState = new TrapezoidProfile.State(0, m_shooter.getLeftShooterMotorRPM());
     m_goalState = new TrapezoidProfile.State(Integer.MAX_VALUE, m_targetRPM);
   }
 
@@ -54,9 +55,9 @@ public class ShooterTrapezoidalPID extends Command {
   public void execute() {
     m_setpointState = m_trapezoidProfile.calculate(m_timer.get(), m_startState, m_goalState);
     SmartDashboard.putNumber("m_setpointState", m_setpointState.velocity);
-    m_accelerationRPM = m_pidController.calculate(m_shooter.getLeftShooterRPM(), m_setpointState.velocity);
+    m_accelerationRPM = m_pidController.calculate(m_shooter.getLeftShooterMotorRPM(), m_setpointState.velocity);
     SmartDashboard.putNumber("m_accelerationRPM", m_accelerationRPM);
-    SmartDashboard.putNumber("velocity", m_shooter.getLeftShooterRPM());
+    SmartDashboard.putNumber("velocity", m_shooter.getLeftShooterMotorRPM());
     //System.out.println(Shooter.WheelRPMtoDutyCycle(m_accelerationRPM));
     //System.out.println("duty cycle" + Shooter.WheelRPMtoDutyCycle(m_shooter.getLeftShooterRPM()+ m_accelerationRPM));
 
@@ -67,8 +68,8 @@ public class ShooterTrapezoidalPID extends Command {
     // System.out.println("Set speed: " + m_accelerationRPM + m_shooter.getLeftShooterRPM());
     // System.out.println();
     // m_shooter.setRPM(m_speedState.position);
-    m_feedForwardOutput = m_feedForward.calculateWithVelocities(m_shooter.getLeftShooterRPM(), m_shooter.getLeftShooterRPM() + m_accelerationRPM);
-    m_shooter.setRPM(m_feedForwardOutput + m_accelerationRPM + m_shooter.getLeftShooterRPM());
+    m_feedForwardOutput = m_feedForward.calculateWithVelocities(m_shooter.getLeftShooterMotorRPM(), m_shooter.getLeftShooterMotorRPM() + m_accelerationRPM);
+    m_shooter.setRPM(m_feedForwardOutput + m_accelerationRPM + m_shooter.getLeftShooterMotorRPM());
   }
 
   // Called once the command ends or is interrupted.
@@ -93,8 +94,10 @@ public class ShooterTrapezoidalPID extends Command {
     public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType("ShooterPID");
       builder.addDoubleProperty("Target RPM", () -> m_targetRPM, (double targetRPM) -> m_targetRPM = targetRPM);
-      builder.addDoubleProperty("Left Shooter RPM", () -> m_shooter.getLeftShooterRPM(), null);
-      builder.addDoubleProperty("Right Shooter RPM", () -> m_shooter.getRightShooterRPM(), null);
+      builder.addDoubleProperty("Left Shooter Motor RPM", () -> m_shooter.getLeftShooterMotorRPM(), null);
+      builder.addDoubleProperty("Right Shooter Motor RPM", () -> m_shooter.getRightShooterMotorRPM(), null);
+      builder.addDoubleProperty("Left Shooter Roller RPM", () -> m_shooter.getLeftShooterWheelRPM(), null);
+      builder.addDoubleProperty("Right Shooter Roller RPM", () -> m_shooter.getRightShooterWheelRPM(), null);
     }
   }
 }
