@@ -8,6 +8,7 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -42,6 +43,8 @@ public class RobotContainer {
     
     m_intakePivot.setDefaultCommand(m_PIDIntakePivot);
     m_shooterPivot.setDefaultCommand(m_arcadeShooterPivot);
+
+    SmartDashboard.putData("Field Simulation", m_field);
 
     SendableRegistry.add(m_arcadeIntakePivot.getIntakePivotArcadeSendable(), "IntakePivotArcade");
     Shuffleboard.getTab("SmartDashboard").add(m_arcadeIntakePivot.getIntakePivotArcadeSendable()).withWidget("IntakePivotArcade");

@@ -41,7 +41,6 @@ public class ShooterPivot extends SubsystemBase {
       m_shooter[i] = m_pivot.append(new MechanismLigament2d("a" + i, 3, 265 + i * 5, 5, new Color8Bit(Color.kAquamarine)));
       m_shooterVoid[i] = m_pivot.append(new MechanismLigament2d("z" + i, 2, 265 + i * 5, 5, new Color8Bit(10,20,30)));
     }
-    SmartDashboard.putData("Shooter Pivot Sim", m_mech);
   }
 
   public double getPosition() {

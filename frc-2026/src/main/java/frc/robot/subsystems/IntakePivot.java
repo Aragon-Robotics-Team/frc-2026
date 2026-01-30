@@ -42,7 +42,6 @@ public class IntakePivot extends SubsystemBase {
     m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
 
     m_motor.setNeutralMode(NeutralModeValue.Brake); // setting mode to brake
-    SmartDashboard.putData("Intake Pivot Sim", m_mech);
   }
 
 
