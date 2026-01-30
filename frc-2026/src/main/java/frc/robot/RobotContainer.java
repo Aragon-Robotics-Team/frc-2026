@@ -16,7 +16,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
 
   private XboxController m_driverJoystick = new XboxController(IOConstants.kDriverJoystickID);
-  private XboxController m_secondaryJoystick = new XboxController(IOConstants.kSecondaryJoystickID);
+  private XboxController m_operatorJoystick = new XboxController(IOConstants.kOperatorJoystickID);
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_driverJoystick);
@@ -25,13 +25,17 @@ public class RobotContainer {
   private final JoystickButton m_resetHeadingButton = new JoystickButton(m_driverJoystick, IOConstants.kResetHeadingButtonID);
   private final InstantCommand m_resetHeadingCommand = m_swerveDrive.resetHeadingCommand();
 
+  private final JoystickButton m_toggleRobotRelativeFieldRelativeButton = new JoystickButton(m_driverJoystick, IOConstants.kToggleRobotRelativeFieldRelativeButtonID);
+  private final InstantCommand m_toggleRobotRelativeFieldRelativeCommand = m_swerveJoystick.toggleRobotRelativeFieldRelativeCommand();
+
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
     m_swerveDrive.setDefaultCommand(m_swerveJoystick);
-     m_resetHeadingButton.whileTrue(m_resetHeadingCommand); // button 4, y button
+    m_resetHeadingButton.onTrue(m_resetHeadingCommand); // button 4, y button
+    m_toggleRobotRelativeFieldRelativeButton.onTrue(m_toggleRobotRelativeFieldRelativeCommand);
   }
 
   public Command getAutonomousCommand() {
