@@ -48,7 +48,7 @@ public class ShooterPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double targetRPM = 6000;
+    double targetRPM = 5100; //3800 motor RPM
     double m_bottom_acceleration_rpm = m_pidController.calculate(m_shooter.getBottomRPM(), targetRPM);
     //double m_bottom_acceleration_rpm = m_pidController.calculate(9000, targetRPM);
     // System.out.println(m_shooter.getBottomRPM()+m_bottom_acceleration_rpm);

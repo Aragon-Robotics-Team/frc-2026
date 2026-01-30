@@ -11,40 +11,35 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import com.ctre.phoenix6.*;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
-  private SparkMax m_bottomMotorCCW = new SparkMax(ShooterConstants.kSparkMaxID_Bottom_CCW, MotorType.kBrushless);
-  private SparkMax m_bottomMotorCW = new SparkMax(ShooterConstants.kSparkMaxID_Bottom_CW, MotorType.kBrushless);
-  private SparkMax m_topMotorCW = new SparkMax(ShooterConstants.kSparkMaxID_Top_CW, MotorType.kBrushless);
+  private TalonFX m_bottomMotorCCW = new TalonFX(ShooterConstants.kSparkMaxID_Bottom_CCW);
+  private TalonFX m_bottomMotorCW = new TalonFX(ShooterConstants.kSparkMaxID_Bottom_CW);
 
-  private SparkMaxConfig m_config_Bottom_CCW = new SparkMaxConfig();
-  private SparkMaxConfig m_config_Bottom_CW = new SparkMaxConfig();
-  private SparkMaxConfig m_config_Top = new SparkMaxConfig();
+  private StatusSignal<AngularVelocity> m_motorVelocityCCW = m_bottomMotorCCW.getVelocity();
+  private StatusSignal<AngularVelocity> m_motorVelocityCW = m_bottomMotorCW.getVelocity();
+
+  private TalonFXConfiguration m_config_bottom_CCW = new TalonFXConfiguration();
+  private TalonFXConfiguration m_config_bottom_CW = new TalonFXConfiguration();
+  
 
   /** Creates a new Shooter. */
   public Shooter() {
-    m_config_Bottom_CCW.idleMode(IdleMode.kCoast);
-    m_config_Bottom_CW.idleMode(IdleMode.kCoast);
-    m_config_Top.idleMode(IdleMode.kCoast);
 
-    m_bottomMotorCCW.configure(m_config_Bottom_CCW, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_bottomMotorCW.configure(m_config_Bottom_CW, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_topMotorCW.configure(m_config_Top, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    //configure motor later
   }
 
-  public void setBottomDutyCycle(double DutyCycle) { // between -1.0 and 1.0; positive is shooting outwards
-    m_bottomMotorCCW.set(DutyCycle); // the motor is spinning CCW so Duty Cycle is negative
-    m_bottomMotorCW.set(-DutyCycle);  // the motor spinning CW so it is positive
-  }
-
-  public void setTopDutyCycle(double DutyCycle) { // between -1.0 and 1.0
-    m_topMotorCW.set(DutyCycle); // it should be spinning CW, so positive
+  public void setBottomDutyCycle(double DutyCycle) { 
+    m_bottomMotorCCW.set(DutyCycle);
+    m_bottomMotorCW.set(-DutyCycle); 
   }
 
   public static double WheelRPMtoDutyCycle(double WheelRPM) {
@@ -53,37 +48,34 @@ public class Shooter extends SubsystemBase {
 
   public void setBottomWheelRPM(double WheelRPM) {
     setBottomDutyCycle(WheelRPMtoDutyCycle(WheelRPM));
+    System.out.println("Duty cycle commanded: " + WheelRPMtoDutyCycle(WheelRPM));
   }
 
   public double getBottomDutyCycle() {
     return m_bottomMotorCW.get(); // we are using the CW motor because this is the one that is spinning positively when shooting
   }
 
-  public double getTopDutyCycle() {
-    return m_topMotorCW.get(); // same idea for this one
-  }
-
 
   public double getBottomRPM() {
-    return m_bottomMotorCCW.getEncoder().getVelocity() * ShooterConstants.kBottomMotorToWheelRatio; // this division operator 
+
+    System.out.println(m_motorVelocityCW.refresh().getValueAsDouble()*60);
+    System.out.println(m_motorVelocityCCW.refresh().getValueAsDouble()*60);
+    System.out.println("*******");
+    return (m_motorVelocityCCW.refresh().getValueAsDouble()*60); 
   }
 
-  public double getTopRPM() {
-    return m_topMotorCW.getEncoder().getVelocity() * ShooterConstants.kTopMotorToWheelRatio;
-  }
 
-  public void setBottomVoltage(double voltage) {
-    m_bottomMotorCCW.setVoltage(-voltage);
-    m_bottomMotorCW.setVoltage(voltage);
+  // public void setBottomVoltage(double voltage) {
+  //   m_bottomMotorCCW.setVoltage(-voltage);
+  //   m_bottomMotorCW.setVoltage(voltage);
 
-  }
+  // }
 
   
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("RPM at the Wheel", getBottomRPM());
-    SmartDashboard.putNumber("Shooter total current", m_bottomMotorCCW.getOutputCurrent() + m_bottomMotorCW.getOutputCurrent());
 
   }
 }
