@@ -90,23 +90,9 @@
     }
   ],
   "robotJoysticks": [
-<<<<<<< HEAD
-<<<<<<< HEAD
     {},
-=======
->>>>>>> 7330866 (Finished sim for actuator)
     {
       "guid": "78696e70757401000000000000000000",
-      "useGamepad": true
-    },
-    {
-=======
-    {
-      "useGamepad": true
-    },
-    {
-      "guid": "78696e70757401000000000000000000",
->>>>>>> 313a99e45fd7e21690952f42e95f0c369ba9cd8e
       "useGamepad": true
     }
   ]
