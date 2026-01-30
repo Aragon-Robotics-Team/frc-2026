@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.SwerveDrive;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SwerveJoystick extends Command {
@@ -20,10 +23,27 @@ public class SwerveJoystick extends Command {
   private final SwerveDrive m_swerveDrive;
   private XboxController m_joystick;
   private boolean m_fieldRelative = true;
+  private boolean m_DPadDrive = false;
+
+  private final Map<Integer, int[]> kDPadDrive = new HashMap<Integer, int[]>(Map.of(
+    0, new int[]{1,0},
+    90, new int[]{0,-1},
+    180, new int[]{-1,0},
+    270, new int[]{0,1},
+
+    45, new int[]{1, -1},
+    135, new int[]{-1,-1},
+    225, new int[]{-1,1},
+    315, new int[]{1,1}
+  ));
   /** Creates a new SwerveJoystick. */
   public SwerveJoystick(SwerveDrive swerveDrive, XboxController joystick) {
     m_swerveDrive = swerveDrive;
     m_joystick = joystick;
+    
+    //System.out.println(m_joystick.getPOV(90));
+    //System.out.println(m_joystick.getPOV(180));
+    //System.out.println(m_joystick.getPOV(270));
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerveDrive);
   }
@@ -43,10 +63,13 @@ public class SwerveJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(m_joystick.getPOV());
+    System.out.println(m_joystick.getPOV());
     double vx = -m_joystick.getLeftY() * DriveConstants.kMaxTranslationalMetersPerSecond * DriveConstants.kSpeedLimiter;
     double vy = -m_joystick.getLeftX() * DriveConstants.kMaxTranslationalMetersPerSecond * DriveConstants.kSpeedLimiter;
     double omega = -m_joystick.getRightX() * DriveConstants.kMaxTranslationalMetersPerSecond;
     ChassisSpeeds m_chassisSpeed = new ChassisSpeeds(vx, vy, omega);
+
     
     if(m_fieldRelative){
       m_chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(m_chassisSpeed, m_swerveDrive.getMeasuredAngle());
@@ -57,6 +80,16 @@ public class SwerveJoystick extends Command {
       SmartDashboard.putBoolean("robot relative", true);
       SmartDashboard.putBoolean("field relative", false);
     }
+
+    if(m_joystick.getPOV() == -1) {
+      ;
+    }
+    else {
+      m_chassisSpeed = new ChassisSpeeds(kDPadDrive.get(m_joystick.getPOV())[0] * DriveConstants.kDPadTranslationalMetersPerSecond, kDPadDrive.get(m_joystick.getPOV())[1] * DriveConstants.kDPadTranslationalMetersPerSecond, 0);
+    }
+
+
+  
     m_swerveDrive.driveRobot(m_chassisSpeed);
     Logger.recordOutput("swerve/chassis/"+"chassis speed", m_chassisSpeed);
     Logger.recordOutput("swerve/chassis/"+"vx", vx);

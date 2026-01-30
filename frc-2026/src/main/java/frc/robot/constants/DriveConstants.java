@@ -48,6 +48,7 @@ public class DriveConstants {
 
     public static final double kWheelDiameter = Units.inchesToMeters(4);
     public static final double kMaxTranslationalMetersPerSecond = 5.8;
+    public static final double kDPadTranslationalMetersPerSecond = 0.5;
     public static final double kGearRatio = 5.36;
 
     public static final int kLeftYAxisID = 1; // "up" is negative
