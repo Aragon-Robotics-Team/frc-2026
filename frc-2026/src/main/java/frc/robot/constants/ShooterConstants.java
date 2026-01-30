@@ -7,25 +7,25 @@ package frc.robot.constants;
 /** Add your docs here. */
 public class ShooterConstants {
 
-    public static final int kLeftMotorCCWID = 0;
-    public static final int kLeftMotorCWID = 1;
+    public static final int kLeftMotorCCWID = 20;
+    public static final int kLeftMotorCWID = 6;
 
-    public static final int kRightMotorCWID = 2;
-    public static final int kRightMotorCCWID = 3;
+    public static final int kRightMotorCWID = 0;
+    public static final int kRightMotorCCWID = 0;
 
     public static final double kWheelToMotorRatio = 30.0 / 18.0;
     public static final double kKrakenX60MaxRPM = 6000.0;
-    public static final double kWheelMaxRPM = kKrakenX60MaxRPM * kWheelToMotorRatio;
+    //public static final double kWheelMaxRPM = kKrakenX60MaxRPM * kWheelToMotorRatio;
 
     public static final double kArcadeSpeedModifier = 0.025;
 
-    public static final double kP = 0.55;
+    public static final double kP = 1;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kTargetRPM = 6000.0;
+    public static final double kTargetRPM = 6000.0; // RPM at the motor 6000 RPM at the wheel.
     public static final double kIdleRPM = 500.0;
-    public static final double kMaxVel = 12000.0;
+    public static final double kMaxVel = 3600.0; // RPM at the motor 6000 RPM at the wheel.
     public static final double kMaxAccel = 6000.0;
 
     public static final double kS = 0;

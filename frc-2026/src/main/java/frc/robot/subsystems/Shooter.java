@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 
@@ -16,7 +18,10 @@ public class Shooter extends SubsystemBase {
   private TalonFX m_leftShooterMotorCW = new TalonFX(ShooterConstants.kLeftMotorCWID);
 
   private TalonFX m_rightShooterMotorCCW = new TalonFX(ShooterConstants.kRightMotorCCWID); // Motors for the right shooter
-  private TalonFX m_rightShooterMotorCW = new TalonFX(ShooterConstants.kRightMotorCWID);  
+  private TalonFX m_rightShooterMotorCW = new TalonFX(ShooterConstants.kRightMotorCWID);
+  
+  private StatusSignal<AngularVelocity> m_leftShooterMotorRPS = m_leftShooterMotorCCW.getVelocity();
+  private StatusSignal<AngularVelocity> m_rightShooterMotorRPS = m_rightShooterMotorCCW.getVelocity();
 
   public Shooter() {
     m_leftShooterMotorCCW.setNeutralMode(NeutralModeValue.Coast);
@@ -36,12 +41,16 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public static double wheelRPMtoDutyCycle(double wheelRPM) {
-    return wheelRPM / ShooterConstants.kWheelMaxRPM;
+  public static double wheelRPMtoMotorRPM(double wheelRPM) {
+    return (wheelRPM / ShooterConstants.kWheelToMotorRatio);
+  }
+
+  public static double motorRPMtoDutyCycle(double motorRPM) {
+    return motorRPM / ShooterConstants.kKrakenX60MaxRPM;
   }
 
   public void setRPM(double wheelRPM) {
-    setDutyCycle(wheelRPMtoDutyCycle(wheelRPM));
+    setDutyCycle(motorRPMtoDutyCycle(wheelRPMtoMotorRPM(wheelRPM)));
   }
 
   public double getLeftDutyCycle() {
@@ -53,29 +62,29 @@ public class Shooter extends SubsystemBase {
   }
 
   // leftShooterRPM used for calculations
-  public double getLeftShooterRPM() {
-    return m_leftShooterMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kWheelToMotorRatio * 60.0; // convert from RPS to RPM
+  public double getLeftShooterRPM() { // RPM at the wheel
+    return m_leftShooterMotorRPS.refresh().getValueAsDouble() * 60.0; // convert from RPS to RPM
   }
 
-  public double getRightShooterRPM() {
-    return m_rightShooterMotorCCW.getVelocity().getValueAsDouble() * ShooterConstants.kWheelToMotorRatio * 60.0;
+  public double getRightShooterRPM() { // RPM at the wheel. 
+    return m_rightShooterMotorRPS.refresh().getValueAsDouble() * 60.0;
   }
  
   public double getLeftShooterAccel() {
-    return m_leftShooterMotorCCW.getAcceleration().getValueAsDouble() * ShooterConstants.kWheelToMotorRatio * 60.0;
+    return m_leftShooterMotorCCW.getAcceleration().getValueAsDouble()* 60.0;
   }
 
   public double getRightShooterAccel() {
-    return m_rightShooterMotorCCW.getAcceleration().getValueAsDouble() * ShooterConstants.kWheelToMotorRatio * 60.0;
+    return m_rightShooterMotorCCW.getAcceleration().getValueAsDouble()* 60.0;
   }
 
-  public void setVoltage(double voltage) {
-    m_leftShooterMotorCCW.setVoltage(-voltage);
-    m_leftShooterMotorCW.setVoltage(voltage);
+  // public void setVoltage(double voltage) {
+  //   m_leftShooterMotorCCW.setVoltage(-voltage);
+  //   m_leftShooterMotorCW.setVoltage(voltage);
 
-    m_rightShooterMotorCCW.setVoltage(-voltage);
-    m_rightShooterMotorCW.setVoltage(voltage);
-  }
+  //   m_rightShooterMotorCCW.setVoltage(-voltage);
+  //   m_rightShooterMotorCW.setVoltage(voltage);
+  // }
 
   // public void setIdleRPM() {
   //   setDutyCycle(WheelRPMtoDutyCycle(ShooterConstants.kIdleRPM));
@@ -88,5 +97,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // System.out.println("RPM at the wheel" + getLeftShooterRPM());
+    // System.out.println("RPM at the motor" + m_leftShooterMotorRPS.getValueAsDouble()*60);
   }
 }

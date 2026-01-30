@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
@@ -18,7 +19,7 @@ import frc.robot.subsystems.Shooter;
 public class ShooterTrapezoidalPID extends Command {
   private Shooter m_shooter;
 
-  private TrapezoidProfile m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(ShooterConstants.kMaxVel, ShooterConstants.kMaxAccel));
+  private TrapezoidProfile m_trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(ShooterConstants.kTargetRPM, ShooterConstants.kMaxAccel));
   private Timer m_timer = new Timer();
   private PIDController m_pidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
   private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
@@ -52,7 +53,10 @@ public class ShooterTrapezoidalPID extends Command {
   @Override
   public void execute() {
     m_setpointState = m_trapezoidProfile.calculate(m_timer.get(), m_startState, m_goalState);
+    SmartDashboard.putNumber("m_setpointState", m_setpointState.velocity);
     m_accelerationRPM = m_pidController.calculate(m_shooter.getLeftShooterRPM(), m_setpointState.velocity);
+    SmartDashboard.putNumber("m_accelerationRPM", m_accelerationRPM);
+    SmartDashboard.putNumber("velocity", m_shooter.getLeftShooterRPM());
     //System.out.println(Shooter.WheelRPMtoDutyCycle(m_accelerationRPM));
     //System.out.println("duty cycle" + Shooter.WheelRPMtoDutyCycle(m_shooter.getLeftShooterRPM()+ m_accelerationRPM));
 
