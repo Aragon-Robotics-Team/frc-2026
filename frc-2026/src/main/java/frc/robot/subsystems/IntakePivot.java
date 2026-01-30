@@ -31,13 +31,16 @@ public class IntakePivot extends SubsystemBase {
   private SingleJointedArmSim m_pivotSim = new SingleJointedArmSim(m_gearbox, IntakePivotConstants.kPivotReduction, SingleJointedArmSim.estimateMOI(IntakePivotConstants.kIntakeLength, IntakePivotConstants.kIntakeMass), IntakePivotConstants.kIntakeLength, IntakePivotConstants.kMinAngle, IntakePivotConstants.kMaxAngle, IntakePivotConstants.kSimGravity, IntakePivotConstants.kSimStartAngle, IntakePivotConstants.kTicksPerPulse, IntakePivotConstants.kEncoderNoise);
   private DutyCycleEncoderSim m_encoderSim = new DutyCycleEncoderSim(m_encoder);
 
-  private Mechanism2d m_mech = new Mechanism2d(5 , 5);
-  private MechanismRoot2d m_pivot = m_mech.getRoot("Pivot", 1, 1);
-  private MechanismLigament2d m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
-  private MechanismLigament2d m_drivetrain = m_pivot.append(new MechanismLigament2d("Drivetrain", 1, 180)); // Static
+  private Mechanism2d m_mech;
+  private MechanismRoot2d m_pivot;
+  private MechanismLigament2d m_intake;
 
 
-  public IntakePivot() {
+  public IntakePivot(Mechanism2d mech) {
+    m_mech = mech;
+    m_pivot = m_mech.getRoot("Pivot", 1, 1);
+    m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
+
     m_motor.setNeutralMode(NeutralModeValue.Brake); // setting mode to brake
     SmartDashboard.putData("Intake Pivot Sim", m_mech);
   }

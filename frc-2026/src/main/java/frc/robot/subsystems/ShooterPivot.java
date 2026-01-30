@@ -21,19 +21,26 @@ public class ShooterPivot extends SubsystemBase {
   private Servo m_actuator = new Servo(ShooterPivotConstants.kServoChannel);
 
   private Mechanism2d m_mech = new Mechanism2d(7, 8);
-  private MechanismRoot2d m_base = m_mech.getRoot("base", 4, 1);
-  private MechanismRoot2d m_pivot = m_mech.getRoot("pivot", 4, 6);
-  private MechanismRoot2d m_drive = m_mech.getRoot("drive", 1, 1);
-  private MechanismLigament2d m_elevator = m_base.append(new MechanismLigament2d("elevator", ShooterPivotConstants.kElevatorMinimumLength, 90));
-  private MechanismLigament2d m_driveTrain = m_drive.append(new MechanismLigament2d("drivetrain", 5, 0, 7, new Color8Bit(Color.kAntiqueWhite)));
+  private MechanismRoot2d m_base;
+  private MechanismRoot2d m_pivot;
+  private MechanismRoot2d m_drive;
+  private MechanismLigament2d m_elevator;
+  private MechanismLigament2d m_drivetrain;
   private MechanismLigament2d[] m_shooter = new MechanismLigament2d[17];
   private MechanismLigament2d[] m_shooterVoid = new MechanismLigament2d[17];
 
-  public ShooterPivot() {
+  public ShooterPivot(Mechanism2d mech) {
+    m_mech = mech;
+    m_base = m_mech.getRoot("base", 4, 1);
+    m_drive = m_mech.getRoot("drive", 1, 1);
+    m_pivot = m_mech.getRoot("pivot", 4, 6);
+    m_elevator =  m_base.append(new MechanismLigament2d("elevator", ShooterPivotConstants.kElevatorMinimumLength, 90));
+    m_drivetrain = m_drive.append(new MechanismLigament2d("drivetrain", 5, 0, 7, new Color8Bit(Color.kAntiqueWhite)));
+
     for (int i = 0; i < 17; i++) {
-    m_shooter[i] = m_pivot.append(new MechanismLigament2d("a" + i, 3, 265 + i * 5, 5, new Color8Bit(Color.kAquamarine)));
-    m_shooterVoid[i] = m_pivot.append(new MechanismLigament2d("z" + i, 2, 265 + i * 5, 5, new Color8Bit(10,20,30)));
-  }
+      m_shooter[i] = m_pivot.append(new MechanismLigament2d("a" + i, 3, 265 + i * 5, 5, new Color8Bit(Color.kAquamarine)));
+      m_shooterVoid[i] = m_pivot.append(new MechanismLigament2d("z" + i, 2, 265 + i * 5, 5, new Color8Bit(10,20,30)));
+    }
     SmartDashboard.putData("Shooter Pivot Sim", m_mech);
   }
 

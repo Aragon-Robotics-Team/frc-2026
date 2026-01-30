@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -22,16 +23,18 @@ import frc.robot.subsystems.ShooterPivot;
 
 public class RobotContainer {
 
+  private Mechanism2d m_field = new Mechanism2d(10, 10);
+
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
 
   private JoystickButton m_intakePivotButton = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonIntakePivot);
-  private IntakePivot m_intakePivot = new IntakePivot();
+  private IntakePivot m_intakePivot = new IntakePivot(m_field);
   private ArcadeIntakePivot m_arcadeIntakePivot = new ArcadeIntakePivot(m_intakePivot, m_secondaryJoystick);
   private PIDIntakePivot m_PIDIntakePivot = new PIDIntakePivot(m_intakePivot, IntakePivotConstants.kTargetTicks);
 
   private JoystickButton m_buttonShooterPivot = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonShooterPivotID);
-  private ShooterPivot m_shooterPivot = new ShooterPivot();
+  private ShooterPivot m_shooterPivot = new ShooterPivot(m_field);
   private ArcadeShooterPivot m_arcadeShooterPivot = new ArcadeShooterPivot(m_shooterPivot, m_secondaryJoystick);
   private ShooterPivotToPosition m_shooterPivotToPosition = new ShooterPivotToPosition(m_shooterPivot, ShooterPivotConstants.kToPositionTargetHeight);
 
