@@ -37,8 +37,8 @@ public class ArcadeShooterPivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_joystick.getRawAxis(IOConstants.kShooterPivotAxis)!=0) {
-      m_position += ShooterPivotConstants.kArcadePositionMultiplier * m_joystick.getRawAxis(IOConstants.kShooterPivotAxis);
+    if(m_joystick.getRawAxis(IOConstants.kShooterPivotJoystickAxis)!=0) {
+      m_position += ShooterPivotConstants.kArcadePositionMultiplier * m_joystick.getRawAxis(IOConstants.kShooterPivotJoystickAxis);
       m_shooterPivot.setPosition(m_position);
     }
     m_position = m_shooterPivot.getPosition();

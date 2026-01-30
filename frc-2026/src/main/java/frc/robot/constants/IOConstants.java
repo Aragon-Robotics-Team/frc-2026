@@ -12,7 +12,6 @@ public class IOConstants {
 
     public static final int kIntakePivotJoystickAxis = 1; // axis to use for the intake pivot
 
-
-    public static final int kShooterPivotAxis = 1;
+    public static final int kShooterPivotJoystickAxis = 0;
     public static final int kButtonShooterPivotID = 1;
 }

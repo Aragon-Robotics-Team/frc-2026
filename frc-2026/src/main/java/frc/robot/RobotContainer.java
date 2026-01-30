@@ -24,7 +24,7 @@ import frc.robot.subsystems.ShooterPivot;
 
 public class RobotContainer {
 
-  private Mechanism2d m_mech = new Mechanism2d(10, 10);
+  private Mechanism2d m_mech = new Mechanism2d(20, 20);
 
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
@@ -41,7 +41,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     
-    m_intakePivot.setDefaultCommand(m_PIDIntakePivot);
+    m_intakePivot.setDefaultCommand(m_arcadeIntakePivot);
     m_shooterPivot.setDefaultCommand(m_arcadeShooterPivot);
 
     SmartDashboard.putData("Mechanism 2D Field Simulation", m_mech);
