@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakePivotConstants;
 import frc.robot.constants.ShooterPivotConstants;
