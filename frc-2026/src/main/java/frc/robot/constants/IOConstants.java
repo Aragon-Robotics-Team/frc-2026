@@ -15,4 +15,5 @@ public class IOConstants {
 
     public static final int kShooterPivotAxis = 1;
     public static final int kButtonShooterPivotID = 1;
+    public static final int kButtonLaunchGamepiece = 2;
 }

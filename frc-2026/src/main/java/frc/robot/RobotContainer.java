@@ -39,6 +39,8 @@ public class RobotContainer {
   private ArcadeShooterPivot m_arcadeShooterPivot = new ArcadeShooterPivot(m_shooterPivot, m_secondaryJoystick);
   private ShooterPivotToPosition m_shooterPivotToPosition = new ShooterPivotToPosition(m_shooterPivot, ShooterPivotConstants.kToPositionTargetHeight);
 
+  private JoystickButton m_buttonLaunchGampiece = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonLaunchGamepiece);
+
   public RobotContainer() {
     
     m_intakePivot.setDefaultCommand(m_PIDIntakePivot);
@@ -56,6 +58,7 @@ public class RobotContainer {
   private void configureBindings() {
     m_intakePivotButton.whileTrue(m_PIDIntakePivot);
     m_buttonShooterPivot.whileTrue(m_shooterPivotToPosition);
+    m_buttonLaunchGampiece.onTrue(m_shooterPivot.launch());
   }
 
   public Command getAutonomousCommand() {

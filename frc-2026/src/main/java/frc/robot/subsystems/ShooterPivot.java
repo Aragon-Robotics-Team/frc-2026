@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterPivotConstants;
 
@@ -57,6 +58,27 @@ public class ShooterPivot extends SubsystemBase {
     } else {
       m_actuator.set(m_actuator.get());
     }
+  }
+
+  public double getSimX() {
+    return Math.cos(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + 4; // get constant names
+  }
+
+  public double getSimY() {
+    return Math.sin(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + 1; // get constant names
+  }
+
+  public double getLaunchAngle() {
+    System.out.println(Math.acos(((m_elevator.getLength() * m_elevator.getLength()) - 34.0) / -30.0));
+    return Math.acos(((m_elevator.getLength() * m_elevator.getLength()) - 34.0) / -30.0);
+  }
+
+  public void newGamepiece() {
+    new Gamepiece(m_mech, this);
+  }
+
+  public InstantCommand launch() {
+    return new InstantCommand(this::newGamepiece, this);
   }
 
   @Override
