@@ -40,6 +40,7 @@ public class IntakePivotConstants {
 
     public static final double kIntakeLength = Units.inchesToMeters(16.5); // In meters
     public static final double kIntakeMass = Units.lbsToKilograms(6.8); // In kilograms
+    public static final double kIntakeSize = 3;
 
     public static final double kPivotReduction = 32.4 / 1.0;
 

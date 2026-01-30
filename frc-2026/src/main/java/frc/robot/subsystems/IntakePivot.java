@@ -39,14 +39,14 @@ public class IntakePivot extends SubsystemBase {
   public IntakePivot(Mechanism2d mech) {
     m_mech = mech;
     m_pivot = m_mech.getRoot("Pivot", ShooterPivotConstants.kDriveTrainStart, ShooterPivotConstants.kDriveTrainHeight);
-    m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
+    m_intake = m_pivot.append(new MechanismLigament2d("Intake", IntakePivotConstants.kIntakeSize, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
 
     m_motor.setNeutralMode(NeutralModeValue.Brake); // setting mode to brake
   }
 
 
   public void setSpeed(double speed){
-    if (IntakePivotConstants.kUpperLimitTicks>=getEncoderTicks()&&getEncoderTicks()>=IntakePivotConstants.kStartingLimitTicks){
+    if (IntakePivotConstants.kUpperLimitTicks>=getEncoderTicks() && getEncoderTicks()>=IntakePivotConstants.kStartingLimitTicks){
       m_motor.set(speed);
     }
     else{
@@ -76,7 +76,7 @@ public class IntakePivot extends SubsystemBase {
     m_pivotSim.update(IntakePivotConstants.kLoopTime);
     m_encoderSim.set(m_pivotSim.getAngleRads());
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_pivotSim.getAngleRads()));
-    m_intake.setAngle(Units.radiansToDegrees(m_pivotSim.getAngleRads()));
+    m_intake.setAngle(- 180 - Units.radiansToDegrees(m_pivotSim.getAngleRads()));
 
     
     // System.out.println(m_pivotSim.getVelocityRadPerSec());
