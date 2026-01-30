@@ -51,7 +51,7 @@ public class SwerveDrive extends SubsystemBase {
       Logger.recordOutput("front right", moduleStates[1]);
       Logger.recordOutput("back left", moduleStates[2]);
       Logger.recordOutput("back right", moduleStates[3]);
-      Logger.recordOutput("swerve module states", moduleStates);
+      Logger.recordOutput("swerve/"+"swerve module states", moduleStates);
   }
 
   public Rotation2d getMeasuredAngle() {
