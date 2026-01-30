@@ -13,19 +13,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SwerveJoystick extends Command {
 
   private final SwerveDrive m_swerveDrive;
   private XboxController m_joystick;
+
+  private final Vision m_vision;
+
   private boolean m_fieldRelative = true;
   /** Creates a new SwerveJoystick. */
-  public SwerveJoystick(SwerveDrive swerveDrive, XboxController joystick) {
+  public SwerveJoystick(SwerveDrive swerveDrive, Vision vision, XboxController joystick) {
     m_swerveDrive = swerveDrive;
+    m_vision = vision;
     m_joystick = joystick;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_swerveDrive);
+    addRequirements(m_swerveDrive, m_vision);
   }
 
   // Called when the command is initially scheduled.

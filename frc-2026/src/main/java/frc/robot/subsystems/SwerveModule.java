@@ -20,6 +20,7 @@ import com.ctre.phoenix6.signals.BridgeOutputValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
@@ -43,6 +44,7 @@ public class SwerveModule extends SubsystemBase {
   private final VelocityVoltage m_driveVelocityInput = new VelocityVoltage(0);
   private final DutyCycleOut m_turnMotorInput = new DutyCycleOut(0);
   private String m_prefix;
+  //private double m_currentAngle;
   /** Creates a new SwerveModule. */
 
   StatusSignal<AngularVelocity> driveAngularVelocity;
@@ -128,20 +130,31 @@ public class SwerveModule extends SubsystemBase {
     driveCTalonFX.getConfigurator().apply(slot0Configs);
   }
 
+  public double getCurrentAngle() {
+    return m_absoluteEncoder.get();
+  }
+
   public void setModuleState(SwerveModuleState state) {
-    double m_currentAngle = m_absoluteEncoder.get(); //radians
-    state.optimize(new Rotation2d(m_currentAngle));
+    state.optimize(new Rotation2d(getCurrentAngle()));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
 
     m_driveMotor.setControl(m_driveVelocityInput.withSlot(0).withVelocity(m_driveMotorRotationsPerSecond * m_driveReversed));
     
-    double m_error = m_pidTurn.calculate(MathUtil.angleModulus(m_currentAngle), state.angle.getRadians());
+    double m_error = m_pidTurn.calculate(MathUtil.angleModulus(getCurrentAngle()), state.angle.getRadians());
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
 
-    logData(state, m_currentAngle, m_error, m_driveMotorRotationsPerSecond);
+    logData(state, m_error, m_driveMotorRotationsPerSecond);
   }
 
-  private void logData(SwerveModuleState moduleState, double currentAngle, double error, double motorRotationsPerSecond) {
+  public double getDrivePosition() {
+    return m_driveMotor.getPosition().refresh().getValueAsDouble();
+  }
+
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getCurrentAngle()));
+  }
+
+  private void logData(SwerveModuleState moduleState, double error, double motorRotationsPerSecond) {
     BaseStatusSignal.refreshAll(driveAngularAcceleration,
       driveAngularVelocity,
       driveBridgeOutput,
@@ -182,10 +195,10 @@ public class SwerveModule extends SubsystemBase {
     Logger.recordOutput("swerve/"+m_prefix+"/turn/Pid/kP", m_pidTurn.getP());
 
     //log absolute encoder info
-    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/dutyCyclePosition", currentAngle / 2 * Math.PI); //0 to 1
+    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/dutyCyclePosition", getCurrentAngle() / 2 * Math.PI); //0 to 1
     Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/absoluteEncoderDutyCycleOffset", m_absoluteEncoderOffset);
-    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/absoluteEncoderPositionInDegrees", currentAngle / Math.PI * 180);
-    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", currentAngle);
+    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/absoluteEncoderPositionInDegrees", getCurrentAngle() / Math.PI * 180);
+    Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/absoluteEncoderPositionInRadians", getCurrentAngle());
     Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/encoderGet"+" "+m_prefix, m_absoluteEncoder.get());
     Logger.recordOutput("swerve/"+m_prefix+"/absoluteEncoder/offset", m_absoluteEncoderOffset);
 
