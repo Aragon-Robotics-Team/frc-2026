@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -18,9 +17,10 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakePivotConstants;
+import frc.robot.constants.ShooterPivotConstants;
 
 public class IntakePivot extends SubsystemBase {
   /** Creates a new IntakePivot. */
@@ -38,7 +38,7 @@ public class IntakePivot extends SubsystemBase {
 
   public IntakePivot(Mechanism2d mech) {
     m_mech = mech;
-    m_pivot = m_mech.getRoot("Pivot", 1, 1);
+    m_pivot = m_mech.getRoot("Pivot", ShooterPivotConstants.kDriveTrainStart, ShooterPivotConstants.kDriveTrainHeight);
     m_intake = m_pivot.append(new MechanismLigament2d("Intake", 3, Units.radiansToDegrees(m_pivotSim.getAngleRads())));
 
     m_motor.setNeutralMode(NeutralModeValue.Brake); // setting mode to brake

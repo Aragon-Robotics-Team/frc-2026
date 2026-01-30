@@ -15,4 +15,16 @@ public class ShooterPivotConstants {
 
     public static final double kElevatorMinimumLength = 2;
     public static final double kServoToActuatorLength = 3;
+
+    public static final double kDriveTrainStart = 1;
+    public static final double kDriveTrainHeight = 1;
+    public static final double kDriveTrainLength = 5;
+    public static final double kDriveTrainWidth = 7;
+    public static final double kPivotX = 4;
+    public static final double kPivotY = 6;
+    public static final double kStartShooterDegrees = 265;
+    public static final double kShooterRadius = 3;
+    public static final double kShooterVoid = 2;
+    public static final int kShooterSize = 17;
+    public static final double kPivotFromBase = kPivotY-kDriveTrainHeight;
 }
