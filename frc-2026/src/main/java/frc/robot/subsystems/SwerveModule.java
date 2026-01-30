@@ -20,6 +20,7 @@ import com.ctre.phoenix6.signals.BridgeOutputValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
@@ -43,6 +44,7 @@ public class SwerveModule extends SubsystemBase {
   private final VelocityVoltage m_driveVelocityInput = new VelocityVoltage(0);
   private final DutyCycleOut m_turnMotorInput = new DutyCycleOut(0);
   private String m_prefix;
+  private double m_currentAngle;
   /** Creates a new SwerveModule. */
 
   StatusSignal<AngularVelocity> driveAngularVelocity;
@@ -128,8 +130,13 @@ public class SwerveModule extends SubsystemBase {
     driveCTalonFX.getConfigurator().apply(slot0Configs);
   }
 
+  public double getCurrentAngle() {
+    m_currentAngle = m_absoluteEncoder.get() - m_absoluteEncoderOffset;
+    return m_currentAngle;
+  }
+
   public void setModuleState(SwerveModuleState state) {
-    double m_currentAngle = m_absoluteEncoder.get(); //radians
+    getCurrentAngle(); // radians
     state.optimize(new Rotation2d(m_currentAngle));
     double m_driveMotorRotationsPerSecond = state.speedMetersPerSecond / (DriveConstants.kWheelDiameter * Math.PI) * DriveConstants.kGearRatio;
 
@@ -139,6 +146,14 @@ public class SwerveModule extends SubsystemBase {
     m_turnMotor.setControl(m_turnMotorInput.withOutput(m_error));
 
     logData(state, m_currentAngle, m_error, m_driveMotorRotationsPerSecond);
+  }
+
+  public double getDrivePosition() {
+    return m_driveMotor.getPosition().refresh().getValueAsDouble();
+  }
+
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getCurrentAngle()));
   }
 
   private void logData(SwerveModuleState moduleState, double currentAngle, double error, double motorRotationsPerSecond) {

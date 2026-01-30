@@ -8,9 +8,19 @@ import org.littletonrobotics.junction.Logger;
 
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.DriveConstants;
@@ -24,6 +34,10 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_backLeft = new SwerveModule(DriveConstants.kBackLeftTurnID, DriveConstants.kBackLeftDriveID, DriveConstants.kBackLeftAbsoluteEncoderPort, DriveConstants.kBackLeftEncoderOffset, DriveConstants.kBackLeftDriveReversed, "back left");
   private SwerveModule m_backRight = new SwerveModule(DriveConstants.kBackRightTurnID, DriveConstants.kBackRightDriveID, DriveConstants.kBackRightAbsoluteEncoderPort, DriveConstants.kBackRightEncoderOffset, DriveConstants.kBackRightDriveReversed, "back right");
   
+  private SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, getMeasuredAngle(), getSwerveModulePositions(), new Pose2d(new Translation2d(Units.inchesToMeters(500.38), Units.inchesToMeters(200.84)), new Rotation2d(0)));
+
+  private Field2d m_field = new Field2d();
+
   public void driveRobot(ChassisSpeeds chassisSpeed) {
       //CREATE CODE TO COMMAND SWERVE MODULES TO MOVE BASED ON CHASSIS SPEEDS
       SwerveModuleState[] moduleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeed);
@@ -45,19 +59,51 @@ public class SwerveDrive extends SubsystemBase {
     return m_imu.getRotation2d();
   }
 
+  public SwerveModulePosition[] getSwerveModulePositions() {
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(), 
+      m_frontRight.getPosition(), 
+      m_backLeft.getPosition(), 
+      m_backRight.getPosition()
+    };
+  }
+
+  public void resetOdo(Pose2d pose) {
+    m_poseEstimator.resetPosition(getMeasuredAngle(), getSwerveModulePositions(), pose);
+  }
+
+  public void resetOdoToPose(Pose2d pose) {
+    m_poseEstimator.resetPose(pose);
+  }
+
   public void resetHeading() {
     m_imu.setYaw(0.0);
   }
 
-  public InstantCommand resetHeadingCommand(){
+  public InstantCommand resetHeadingCommand() {
     return new InstantCommand(this::resetHeading, this);
   }
+
+  public Pose2d getEstimatedPosition() {
+    return m_poseEstimator.getEstimatedPosition();
+  }
   
+  public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStandardDevs) {
+    m_poseEstimator.addVisionMeasurement(pose, timestamp, estimationStandardDevs);
+  }
+
   /** Creates a new SwerveDrive. */
-  public SwerveDrive() {}
+  public SwerveDrive() {
+    // resetOdoToPose(new Pose2d(new Translation2d(Units.inchesToMeters(500.38), Units.inchesToMeters(200.84)), new Rotation2d(0)));
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    m_field.setRobotPose(getEstimatedPosition());
+    SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putNumber("Pose X", getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Y", getEstimatedPosition().getY());
+    m_poseEstimator.update(getMeasuredAngle(), getSwerveModulePositions());
   }
 }

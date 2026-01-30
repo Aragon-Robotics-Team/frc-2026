@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.constants.IOConstants;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
@@ -19,8 +20,8 @@ public class RobotContainer {
   private XboxController m_operatorJoystick = new XboxController(IOConstants.kOperatorJoystickID);
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
-  private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_driverJoystick);
-
+  private Vision m_vision = new Vision(m_swerveDrive::addVisionMeasurement);
+  private SwerveJoystick m_swerveJoystick = new SwerveJoystick(m_swerveDrive, m_vision, m_driverJoystick);
 
   private final JoystickButton m_resetHeadingButton = new JoystickButton(m_driverJoystick, IOConstants.kResetHeadingButtonID);
   private final InstantCommand m_resetHeadingCommand = m_swerveDrive.resetHeadingCommand();
