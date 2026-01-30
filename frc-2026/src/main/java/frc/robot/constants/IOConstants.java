@@ -24,6 +24,6 @@ public class IOConstants {
         "L2", 9, // clicking down the left joystick
         "R2", 10 // clicking down the right joystick
     ));
-    public static final int kResetHeadingButtonID = kButtonIDs.get("Y"); // button y
-    public static final int kToggleRobotRelativeFieldRelativeButtonID = kButtonIDs.get("A");
+    public static final int kResetHeadingButtonID = kButtonIDs.get("Y");
+    public static final int kToggleRobotRelativeFieldRelativeButtonID = kButtonIDs.get("RB");
 }

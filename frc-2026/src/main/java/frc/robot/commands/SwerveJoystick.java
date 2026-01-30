@@ -58,10 +58,10 @@ public class SwerveJoystick extends Command {
       SmartDashboard.putBoolean("field relative", false);
     }
     m_swerveDrive.driveRobot(m_chassisSpeed);
-    Logger.recordOutput("chassis speed", m_chassisSpeed);
-    Logger.recordOutput("vx", vx);
-    Logger.recordOutput("vy", -m_joystick.getRawAxis(DriveConstants.kLeftXAxisID) * DriveConstants.kMaxTranslationalMetersPerSecond);
-    Logger.recordOutput("rotation", -m_joystick.getRawAxis(DriveConstants.kRightXAxisID) * DriveConstants.kMaxTranslationalMetersPerSecond);
+    Logger.recordOutput("swerve/chassis/"+"chassis speed", m_chassisSpeed);
+    Logger.recordOutput("swerve/chassis/"+"vx", vx);
+    Logger.recordOutput("swerve/chassis/"+"vy", vy);
+    Logger.recordOutput("swerve/chassis"+"rotation", omega);
   }
 
   // Called once the command ends or is interrupted.
