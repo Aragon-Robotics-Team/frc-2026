@@ -36,7 +36,6 @@ public class Gamepiece extends SubsystemBase {
   private double m_time;
   private MechanismLigament2d[] m_gamepieceRender;
 
-  private ArrayList<MechanismRoot2d> m_gamepieces = new ArrayList<MechanismRoot2d>();
   public Gamepiece(Mechanism2d mech, ShooterPivot shooterPivot) {
     m_mech = mech;
     m_shooterPivot = shooterPivot;
