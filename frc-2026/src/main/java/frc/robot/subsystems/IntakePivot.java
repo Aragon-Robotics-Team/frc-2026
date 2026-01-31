@@ -50,7 +50,6 @@ public class IntakePivot extends SubsystemBase {
     }
     else{
       m_motor.set(0);
-      System.out.println("Out of bounds");
     }
   } // setting the speed method
 

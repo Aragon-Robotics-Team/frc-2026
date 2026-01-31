@@ -21,13 +21,22 @@ import frc.robot.commands.ArcadeShooterPivot;
 import frc.robot.commands.ShooterPivotToPosition;
 import frc.robot.constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivot;
+import frc.robot.commands.ShooterTrapezoidalPID;
+import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
 
-  private Mechanism2d m_mech = new Mechanism2d(20, 20);
+  private Mechanism2d m_mech = new Mechanism2d(60, 50);
 
   private Joystick m_driverJoystick = new Joystick(IOConstants.kDriverJoystickID);
   private Joystick m_secondaryJoystick = new Joystick(IOConstants.kSecondaryJoystickID);
+
+  private Shooter m_shooter = new Shooter();
+  private ShooterTrapezoidalPID m_shooterPID = new ShooterTrapezoidalPID(m_shooter, ShooterConstants.kTargetRPM);
+  private ShooterTrapezoidalPID m_shooterIdle = new ShooterTrapezoidalPID(m_shooter, ShooterConstants.kIdleRPM);
+
+  private JoystickButton m_buttonShooter = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonShooter);
 
   private JoystickButton m_intakePivotButton = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonIntakePivot);
   private IntakePivot m_intakePivot = new IntakePivot(m_mech);
@@ -35,7 +44,7 @@ public class RobotContainer {
   private PIDIntakePivot m_PIDIntakePivot = new PIDIntakePivot(m_intakePivot, IntakePivotConstants.kTargetTicks);
 
   private JoystickButton m_buttonShooterPivot = new JoystickButton(m_secondaryJoystick, IOConstants.kButtonShooterPivotID);
-  private ShooterPivot m_shooterPivot = new ShooterPivot(m_mech);
+  private ShooterPivot m_shooterPivot = new ShooterPivot(m_shooter, m_mech);
   private ArcadeShooterPivot m_arcadeShooterPivot = new ArcadeShooterPivot(m_shooterPivot, m_secondaryJoystick);
   private ShooterPivotToPosition m_shooterPivotToPosition = new ShooterPivotToPosition(m_shooterPivot, ShooterPivotConstants.kToPositionTargetHeight);
 
@@ -45,6 +54,7 @@ public class RobotContainer {
     
     m_intakePivot.setDefaultCommand(m_arcadeIntakePivot);
     m_shooterPivot.setDefaultCommand(m_arcadeShooterPivot);
+    m_shooter.setDefaultCommand(m_shooterIdle);
 
     SmartDashboard.putData("Mechanism 2D Field Simulation", m_mech);
 
@@ -52,6 +62,8 @@ public class RobotContainer {
     Shuffleboard.getTab("SmartDashboard").add(m_arcadeIntakePivot.getIntakePivotArcadeSendable()).withWidget("IntakePivotArcade");
     SendableRegistry.add(m_PIDIntakePivot.getPIDIntakePivotSendable(), "IntakePivotPID");
     Shuffleboard.getTab("SmartDashboard").add(m_PIDIntakePivot.getPIDIntakePivotSendable()).withWidget("IntakePivotPID");
+    SendableRegistry.add(m_shooterPID.getSendable(), "ShooterPID");
+    Shuffleboard.getTab("SmartDashboard").add(m_shooterPID.getSendable()).withWidget("ShooterPID");
     configureBindings();
   }
 
@@ -59,6 +71,8 @@ public class RobotContainer {
     m_intakePivotButton.whileTrue(m_PIDIntakePivot);
     m_buttonShooterPivot.whileTrue(m_shooterPivotToPosition);
     m_buttonLaunchGampiece.onTrue(m_shooterPivot.launch());
+    m_buttonShooter.whileTrue(m_shooterPID);
+    m_buttonShooter.onFalse(m_shooterIdle);
   }
 
   public Command getAutonomousCommand() {

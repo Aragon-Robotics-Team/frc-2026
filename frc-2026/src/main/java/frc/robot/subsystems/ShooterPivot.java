@@ -17,7 +17,7 @@ import frc.robot.constants.ShooterPivotConstants;
 
 public class ShooterPivot extends SubsystemBase {
   /** Creates a new ShooterPivot. */
-
+  private Shooter m_shooter;
   private Servo m_actuator = new Servo(ShooterPivotConstants.kServoChannel);
 
   private Mechanism2d m_mech = new Mechanism2d(7, 8);
@@ -26,10 +26,11 @@ public class ShooterPivot extends SubsystemBase {
   private MechanismRoot2d m_drive;
   private MechanismLigament2d m_elevator;
   private MechanismLigament2d m_drivetrain;
-  private MechanismLigament2d[] m_shooter = new MechanismLigament2d[17];
+  private MechanismLigament2d[] m_shooterLigaments = new MechanismLigament2d[17];
   private MechanismLigament2d[] m_shooterVoid = new MechanismLigament2d[17];
 
-  public ShooterPivot(Mechanism2d mech) {
+  public ShooterPivot(Shooter shooter, Mechanism2d mech) {
+    m_shooter = shooter;
     m_mech = mech;
     m_base = m_mech.getRoot("base", ShooterPivotConstants.kBaseX, ShooterPivotConstants.kDriveTrainHeight);
     m_drive = m_mech.getRoot("drive", ShooterPivotConstants.kDriveTrainStart, ShooterPivotConstants.kDriveTrainHeight);
@@ -38,7 +39,7 @@ public class ShooterPivot extends SubsystemBase {
     m_drivetrain = m_drive.append(new MechanismLigament2d("drivetrain", ShooterPivotConstants.kDriveTrainLength, 0, ShooterPivotConstants.kDriveTrainWidth, new Color8Bit(Color.kAntiqueWhite)));
 
     for (int i = 0; i < ShooterPivotConstants.kShooterSize; i++) {
-      m_shooter[i] = m_pivot.append(new MechanismLigament2d("a" + i, ShooterPivotConstants.kShooterRadius, ShooterPivotConstants.kStartShooterDegrees + i * 5, 5, new Color8Bit(Color.kAquamarine)));
+      m_shooterLigaments[i] = m_pivot.append(new MechanismLigament2d("a" + i, ShooterPivotConstants.kShooterRadius, ShooterPivotConstants.kStartShooterDegrees + i * 5, 5, new Color8Bit(Color.kAquamarine)));
       m_shooterVoid[i] = m_pivot.append(new MechanismLigament2d("z" + i, ShooterPivotConstants.kShooterVoid, ShooterPivotConstants.kStartShooterDegrees + i * 5, 5, new Color8Bit(10,20,30)));
     }
   }
@@ -60,11 +61,11 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public double getSimX() {
-    return Math.cos(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + 4; // get constant names
+    return Math.cos(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + ShooterPivotConstants.kBaseX; // get constant names
   }
 
   public double getSimY() {
-    return Math.sin(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + 1; // get constant names
+    return Math.sin(Units.degreesToRadians(m_elevator.getAngle())) * m_elevator.getLength() + ShooterPivotConstants.kDriveTrainHeight; // get constant names
   }
 
   public double getLaunchAngle() {
@@ -73,7 +74,7 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public void newGamepiece() {
-    new Gamepiece(m_mech, this);
+    new Gamepiece(m_mech, this, m_shooter);
   }
 
   public InstantCommand launch() {
@@ -89,7 +90,7 @@ public class ShooterPivot extends SubsystemBase {
     m_elevator.setLength(ShooterPivotConstants.kElevatorMinimumLength + ShooterPivotConstants.kServoToActuatorLength * getPosition());
     m_elevator.setAngle(90 - (Math.acos((m_elevator.getLength() * m_elevator.getLength() + ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kPivotFromBase - ShooterPivotConstants.kShooterRadius * ShooterPivotConstants.kShooterRadius) / (2 * ShooterPivotConstants.kPivotFromBase * m_elevator.getLength())) * 180 / Math.PI));
     for (int i = 0; i < ShooterPivotConstants.kShooterSize; i++) {
-      m_shooter[i].setAngle(ShooterPivotConstants.kStartShooterDegrees + (5 * i) + Units.radiansToDegrees(Math.acos(((m_elevator.getLength() * m_elevator.getLength()) - ((ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kPivotFromBase) + (ShooterPivotConstants.kShooterRadius * ShooterPivotConstants.kShooterRadius))) / (- 2 * ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kShooterRadius))));
+      m_shooterLigaments[i].setAngle(ShooterPivotConstants.kStartShooterDegrees + (5 * i) + Units.radiansToDegrees(Math.acos(((m_elevator.getLength() * m_elevator.getLength()) - ((ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kPivotFromBase) + (ShooterPivotConstants.kShooterRadius * ShooterPivotConstants.kShooterRadius))) / (- 2 * ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kShooterRadius))));
       m_shooterVoid[i].setAngle(ShooterPivotConstants.kStartShooterDegrees + (5 * i) + Units.radiansToDegrees(Math.acos(((m_elevator.getLength() * m_elevator.getLength()) - ((ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kPivotFromBase) + (ShooterPivotConstants.kShooterRadius * ShooterPivotConstants.kShooterRadius))) / (- 2 * ShooterPivotConstants.kPivotFromBase * ShooterPivotConstants.kShooterRadius))));
     }
   }

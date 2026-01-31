@@ -13,14 +13,16 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.GamepieceConstants;
 import frc.robot.constants.IntakePivotConstants;
+import frc.robot.constants.ShooterConstants;
 
 public class Gamepiece extends SubsystemBase {
   /** Creates a new Gamepiece. */
+  private ShooterPivot m_shooterPivot;
+  private Shooter m_shooter;
 
   private static int id = 0;
   private Mechanism2d m_mech;
   private MechanismRoot2d m_gamepiece;
-  private ShooterPivot m_shooterPivot;
   private double m_angleRads;
   
   private double m_xOffset;
@@ -36,9 +38,10 @@ public class Gamepiece extends SubsystemBase {
   private double m_time;
   private MechanismLigament2d[] m_gamepieceRender;
 
-  public Gamepiece(Mechanism2d mech, ShooterPivot shooterPivot) {
-    m_mech = mech;
+  public Gamepiece(Mechanism2d mech, ShooterPivot shooterPivot, Shooter shooter) {
     m_shooterPivot = shooterPivot;
+    m_shooter = shooter;
+    m_mech = mech;
 
     m_xOffset = m_shooterPivot.getSimX();
     m_yOffset = m_shooterPivot.getSimY();
@@ -51,7 +54,7 @@ public class Gamepiece extends SubsystemBase {
     }
 
     m_angleRads = m_shooterPivot.getLaunchAngle();
-    // m_initialV = m_shooter.getWheelRPM() / 60.0 * 2.0 * Math.PI * ShooterConstants.kRollerRadius;
+    m_initialV = m_shooter.getLeftShooterDutyCycle() * 10000.0 * 2.0 * Math.PI * ShooterConstants.kRollerRadius;
     m_initialXV = Math.cos(m_angleRads) * m_initialV;
     m_initialYV = Math.sin(m_angleRads) * m_initialV;
 
